@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Vite
+*.local
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Testing
+coverage/
+
+# TypeScript / unplugin generated
+*.tsbuildinfo
+auto-imports.d.ts
+components.d.ts
+typed-router.d.ts
+
+# PWA
+dev-dist/
+sw.js
+workbox-*.js
+
+# Claude Code
+.claude/settings.local.json
+.claude/todos.local.json
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
