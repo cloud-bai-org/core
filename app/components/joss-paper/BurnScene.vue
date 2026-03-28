@@ -33,25 +33,6 @@
         @burn-complete="onBurnComplete"
       />
 
-      <!-- 手動模式：可拖曳的金紙堆 -->
-      <div
-        v-if="store.burnMode === 'manual' && store.phase === 'burning'"
-        class="absolute bottom-2 left-2 flex flex-col items-center gap-1"
-      >
-        <div
-          v-for="(paper, idx) in remainingManualPapers"
-          :key="paper.id + idx"
-          class="size-10 rounded border border-amber-400/50 bg-amber-200 shadow-sm"
-          :class="idx === 0 && !dragging ? 'animate-pulse cursor-grab' : 'opacity-60'"
-          :style="{ transform: `translateY(${idx * -3}px)` }"
-        >
-          <div class="m-1.5 size-5 rounded-sm bg-amber-400/60" />
-        </div>
-        <span class="mt-1 text-xs text-muted-foreground">
-          剩餘 {{ remainingManualPapers.length }} 張
-        </span>
-      </div>
-
       <!-- 拖曳中的金紙 -->
       <div
         v-if="dragging"
@@ -67,18 +48,40 @@
 
     <!-- 焚燒進度 -->
     <div v-if="store.phase === 'burning'" class="text-sm text-muted-foreground">
-      已焚燒 {{ store.totalBurned }} / {{ store.selectedPapers.length }} 張
+      已焚燒 {{ store.totalBurned }} / {{ store.burnQueue.length }} 組
     </div>
 
-    <!-- 手動模式的自動完成按鈕 -->
-    <Button
-      v-if="store.burnMode === 'manual' && store.phase === 'burning' && remainingManualPapers.length > 0"
-      variant="outline"
-      size="sm"
-      @click="autoCompleteRemaining"
-    >
-      自動完成剩餘 {{ remainingManualPapers.length }} 張
-    </Button>
+    <!-- 手動模式：可拖曳的金紙堆 + 自動完成按鈕 -->
+    <template v-if="store.burnMode === 'manual' && store.phase === 'burning'">
+      <div
+        v-if="remainingManualPapers.length > 0"
+        class="flex items-center gap-3"
+      >
+        <div class="flex items-end">
+          <div
+            v-for="(paper, idx) in displayedPaperStack"
+            :key="paper.id + idx"
+            class="size-10 rounded border border-amber-400/50 bg-amber-200 shadow-sm"
+            :class="idx === 0 && !dragging ? 'animate-pulse cursor-grab' : 'opacity-60'"
+            :style="{ marginLeft: idx > 0 ? '-12px' : '0', zIndex: displayedPaperStack.length - idx }"
+          >
+            <div class="m-1.5 size-5 rounded-sm bg-amber-400/60" />
+          </div>
+        </div>
+        <span class="text-sm text-muted-foreground">
+          剩餘 {{ remainingManualPapers.length }} 組，拖曳投入金爐
+        </span>
+      </div>
+
+      <Button
+        v-if="remainingManualPapers.length > 0"
+        variant="outline"
+        size="sm"
+        @click="autoCompleteRemaining"
+      >
+        自動完成剩餘 {{ remainingManualPapers.length }} 組
+      </Button>
+    </template>
   </div>
 </template>
 
@@ -101,7 +104,7 @@ const sceneRef = ref<HTMLElement | null>(null)
 const isBurning = ref(false)
 const currentPaper = ref<JossPaperType | null>(null)
 const fireIntensity = computed(() => {
-  const total = store.selectedPapers.length
+  const total = store.burnQueue.length
   if (total === 0) return 0
   return Math.min(1, store.totalBurned / total + 0.2)
 })
@@ -112,17 +115,22 @@ const dragPos = reactive({ x: 0, y: 0 })
 const manualIndex = ref(0)
 
 const remainingManualPapers = computed(() => {
-  return store.selectedPaperTypes.slice(manualIndex.value)
+  return store.burnQueue.slice(manualIndex.value)
+})
+
+// 最多顯示 5 個堆疊的金紙圖示
+const displayedPaperStack = computed(() => {
+  return remainingManualPapers.value.slice(0, 5)
 })
 
 // ---- 自動焚燒模式 ----
 
 async function startAutoBurn() {
-  for (let i = 0; i < store.selectedPaperTypes.length; i++) {
+  for (let i = 0; i < store.burnQueue.length; i++) {
     if (store.phase !== 'burning') break
 
     store.currentBurningIndex = i
-    currentPaper.value = store.selectedPaperTypes[i]
+    currentPaper.value = store.burnQueue[i]
 
     await burnOnePaper()
   }
@@ -154,19 +162,14 @@ function onPointerDown(e: PointerEvent) {
   if (store.burnMode !== 'manual' || store.phase !== 'burning') return
   if (remainingManualPapers.value.length === 0) return
 
+  dragging.value = true
   const rect = sceneRef.value?.getBoundingClientRect()
   if (!rect) return
 
-  // 檢查是否點在金紙堆區域（左下角）
-  const x = e.clientX - rect.left
-  const y = e.clientY - rect.top
-  if (x < 80 && y > rect.height - 100) {
-    dragging.value = true
-    dragPos.x = x
-    dragPos.y = y
-    ;(e.target as Element)?.setPointerCapture?.(e.pointerId)
-    e.preventDefault()
-  }
+  dragPos.x = e.clientX - rect.left
+  dragPos.y = e.clientY - rect.top
+  ;(e.target as Element)?.setPointerCapture?.(e.pointerId)
+  e.preventDefault()
 }
 
 function onPointerMove(e: PointerEvent) {
@@ -207,7 +210,7 @@ function onPointerUp(e: PointerEvent) {
 // 自動完成剩餘金紙
 async function autoCompleteRemaining() {
   store.burnMode = 'auto'
-  const remaining = store.selectedPaperTypes.slice(manualIndex.value)
+  const remaining = store.burnQueue.slice(manualIndex.value)
   for (let i = 0; i < remaining.length; i++) {
     if (store.phase !== 'burning') break
 

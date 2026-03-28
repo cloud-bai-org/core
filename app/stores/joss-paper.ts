@@ -5,6 +5,7 @@ export interface JossPaperType {
   id: string
   name: string
   description: string
+  sheetsPerBundle: number // 每組張數
   // 粒子參數
   particle: {
     flameColors: [string, string, string] // 內焰、外焰、尖端
@@ -12,7 +13,7 @@ export interface JossPaperType {
     burnSpeed: number // 燃燒速度倍率（1 為標準）
     sparkDensity: number // 火花密度倍率
   }
-  // 每張金紙等效的實體紙張克數
+  // 每組金紙等效的實體紙張克數
   paperGrams: number
 }
 
@@ -21,6 +22,7 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     id: 'shou-jin',
     name: '壽金',
     description: '祭拜天公、三界公等天神使用',
+    sheetsPerBundle: 100,
     particle: {
       flameColors: ['#FFD700', '#FF8C00', '#FF4500'],
       ashColor: '#8B8682',
@@ -33,6 +35,7 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     id: 'gua-jin',
     name: '刈金',
     description: '祭拜一般神明使用',
+    sheetsPerBundle: 100,
     particle: {
       flameColors: ['#FFC125', '#FF7F00', '#FF3030'],
       ashColor: '#808080',
@@ -45,6 +48,7 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     id: 'fu-jin',
     name: '福金',
     description: '祭拜土地公、地基主使用',
+    sheetsPerBundle: 100,
     particle: {
       flameColors: ['#FFE4B5', '#FFA500', '#FF6347'],
       ashColor: '#9E9E9E',
@@ -57,6 +61,7 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     id: 'da-bai-shou-jin',
     name: '大百壽金',
     description: '祭拜玉皇大帝等最高階神明使用',
+    sheetsPerBundle: 50,
     particle: {
       flameColors: ['#FFFACD', '#FFD700', '#FF8C00'],
       ashColor: '#A9A9A9',
@@ -69,6 +74,7 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     id: 'yin-zhi',
     name: '銀紙',
     description: '祭拜祖先、好兄弟使用',
+    sheetsPerBundle: 50,
     particle: {
       flameColors: ['#C0C0C0', '#B0B0B0', '#FF6347'],
       ashColor: '#696969',
@@ -88,21 +94,27 @@ export type BurnPhase =
   | 'burning'       // 焚燒中
   | 'completed'     // 焚燒完成
 
+// 選擇的金紙：id → 組數
+export interface SelectedBundle {
+  id: string
+  bundles: number
+}
+
 export interface BurnState {
   phase: BurnPhase
-  selectedPapers: string[] // JossPaperType ids
+  selectedBundles: SelectedBundle[] // 已選金紙與組數
   burnMode: BurnMode
   animationLevel: AnimationLevel
   // 焚燒進度
-  currentBurningIndex: number // 目前正在燒的金紙 index（auto 模式用）
-  burnProgress: number // 0~1，當前金紙燃燒進度
-  totalBurned: number // 已焚燒完成的張數
+  currentBurningIndex: number // 目前正在燒的組 index
+  burnProgress: number // 0~1，當前組燃燒進度
+  totalBurned: number // 已焚燒完成的組數
 }
 
 export const useJossPaperStore = defineStore('joss-paper', {
   state: (): BurnState => ({
     phase: 'selecting',
-    selectedPapers: [],
+    selectedBundles: [],
     burnMode: 'auto',
     animationLevel: 'standard',
     currentBurningIndex: 0,
@@ -111,22 +123,39 @@ export const useJossPaperStore = defineStore('joss-paper', {
   }),
 
   getters: {
-    selectedPaperTypes(): JossPaperType[] {
-      return this.selectedPapers
-        .map(id => JOSS_PAPER_TYPES.find(p => p.id === id))
-        .filter((p): p is JossPaperType => !!p)
+    /** 展開所有組為逐組列表（每組對應一個 JossPaperType），供焚燒流程迭代 */
+    burnQueue(): JossPaperType[] {
+      const queue: JossPaperType[] = []
+      for (const sb of this.selectedBundles) {
+        const type = JOSS_PAPER_TYPES.find(p => p.id === sb.id)
+        if (!type) continue
+        for (let i = 0; i < sb.bundles; i++) {
+          queue.push(type)
+        }
+      }
+      return queue
+    },
+
+    totalBundles(): number {
+      return this.selectedBundles.reduce((sum, sb) => sum + sb.bundles, 0)
     },
 
     currentBurningPaper(): JossPaperType | null {
-      return this.selectedPaperTypes[this.currentBurningIndex] ?? null
-    },
-
-    remainingPapers(): JossPaperType[] {
-      return this.selectedPaperTypes.slice(this.currentBurningIndex + 1)
+      return this.burnQueue[this.currentBurningIndex] ?? null
     },
 
     totalPaperGrams(): number {
-      return this.selectedPaperTypes.reduce((sum, p) => sum + p.paperGrams, 0)
+      return this.selectedBundles.reduce((sum, sb) => {
+        const type = JOSS_PAPER_TYPES.find(p => p.id === sb.id)
+        return sum + (type ? type.paperGrams * sb.bundles : 0)
+      }, 0)
+    },
+
+    totalSheets(): number {
+      return this.selectedBundles.reduce((sum, sb) => {
+        const type = JOSS_PAPER_TYPES.find(p => p.id === sb.id)
+        return sum + (type ? type.sheetsPerBundle * sb.bundles : 0)
+      }, 0)
     },
 
     particleConfig(): { maxParticles: number, targetFps: number } {
@@ -139,12 +168,18 @@ export const useJossPaperStore = defineStore('joss-paper', {
   },
 
   actions: {
-    togglePaper(id: string) {
-      const idx = this.selectedPapers.indexOf(id)
-      if (idx >= 0) {
-        this.selectedPapers.splice(idx, 1)
+    getBundles(id: string): number {
+      return this.selectedBundles.find(sb => sb.id === id)?.bundles ?? 0
+    },
+
+    setBundles(id: string, bundles: number) {
+      const existing = this.selectedBundles.find(sb => sb.id === id)
+      if (bundles <= 0) {
+        this.selectedBundles = this.selectedBundles.filter(sb => sb.id !== id)
+      } else if (existing) {
+        existing.bundles = bundles
       } else {
-        this.selectedPapers.push(id)
+        this.selectedBundles.push({ id, bundles })
       }
     },
 
@@ -165,7 +200,7 @@ export const useJossPaperStore = defineStore('joss-paper', {
 
     advanceToNextPaper() {
       this.totalBurned++
-      if (this.currentBurningIndex + 1 >= this.selectedPapers.length) {
+      if (this.currentBurningIndex + 1 >= this.burnQueue.length) {
         this.phase = 'completed'
       } else {
         this.currentBurningIndex++
@@ -179,7 +214,7 @@ export const useJossPaperStore = defineStore('joss-paper', {
 
     reset() {
       this.phase = 'selecting'
-      this.selectedPapers = []
+      this.selectedBundles = []
       this.burnMode = 'auto'
       this.currentBurningIndex = 0
       this.burnProgress = 0

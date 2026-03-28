@@ -10,7 +10,7 @@
       </div>
       <Button
         size="lg"
-        :disabled="store.selectedPapers.length === 0"
+        :disabled="store.totalBundles === 0"
         @click="store.proceedToModeSelect()"
       >
         選好了，下一步
