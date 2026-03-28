@@ -3,6 +3,7 @@
     :phase="store.phase"
     :remaining-ratio="store.remainingRatio"
     :max-particles="maxParticles"
+    @stick-click="$emit('stickClick')"
   />
 </template>
 
@@ -10,8 +11,12 @@
 import { useIncenseStore } from '~/stores/incense'
 import IncenseCanvas from './IncenseCanvas.vue'
 
-const props = defineProps<{
+defineProps<{
   maxParticles?: number
+}>()
+
+defineEmits<{
+  stickClick: []
 }>()
 
 const store = useIncenseStore()

@@ -3,15 +3,27 @@
     <h1 class="text-2xl font-medium">焚香</h1>
 
     <!-- 焚香場景 -->
-    <IncenseScene v-if="ready" :max-particles="adaptiveParticles" />
+    <IncenseScene v-if="ready" :max-particles="adaptiveParticles" @stick-click="handleStickClick" />
 
     <!-- 狀態提示 -->
-    <p class="text-sm text-muted-foreground">
-      <template v-if="store.phase === 'idle'">點燃香燭，誠心祈願</template>
-      <template v-else-if="store.phase === 'lighting'">正在點香…</template>
-      <template v-else-if="store.phase === 'burning'">焚香進行中（{{ remainingText }}）</template>
-      <template v-else-if="store.phase === 'completed'">香已燃畢</template>
-    </p>
+    <div class="flex items-center gap-1.5 text-sm text-muted-foreground">
+      <span v-if="store.phase === 'idle'">點燃香燭，誠心祈願</span>
+      <span v-else-if="store.phase === 'lighting'">正在點香…</span>
+      <span v-else-if="store.phase === 'burning'">焚香進行中（{{ remainingText }}）</span>
+      <span v-else-if="store.phase === 'completed' && store.remainingRatio > 0">香已熄滅</span>
+      <span v-else-if="store.phase === 'completed'">香已燃畢</span>
+
+      <Popover v-if="showHint" :default-open="true">
+        <PopoverTrigger as-child>
+          <button class="rounded-full p-0.5 text-muted-foreground transition-colors hover:text-foreground">
+            <Info :size="14" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent class="w-auto px-3 py-1.5 text-sm" :side-offset="4">
+          {{ hintText }}
+        </PopoverContent>
+      </Popover>
+    </div>
 
     <!-- In-App 降級通知 -->
     <Card v-if="showFallbackNotice" class="w-full max-w-sm border-amber-500/50 bg-amber-50/10">
@@ -33,14 +45,6 @@
 
       <Button
         v-if="store.phase === 'burning'"
-        variant="outline"
-        @click="extinguish"
-      >
-        熄香
-      </Button>
-
-      <Button
-        v-if="store.phase === 'burning'"
         size="lg"
         @click="handleContinue"
       >
@@ -54,19 +58,13 @@
       >
         繼續儀式
       </Button>
-
-      <Button
-        v-if="store.phase === 'completed'"
-        variant="outline"
-        @click="handleReset"
-      >
-        重新焚香
-      </Button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Info } from 'lucide-vue-next'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import { useIncenseStore } from '~/stores/incense'
 import { useIncenseTimer } from '~/composables/useIncenseTimer'
 import { useIncenseNotification } from '~/composables/useIncenseNotification'
@@ -75,8 +73,18 @@ import IncenseScene from '~/components/incense/IncenseScene.vue'
 definePageMeta({ capability: 'incense-simulation' })
 
 const store = useIncenseStore()
-const { lightIncense, extinguish, restoreState, handleComplete, setupVisibilityListener, cleanupVisibilityListener } = useIncenseTimer()
+const { lightIncense, extinguish, relight, restoreState, handleComplete, setupVisibilityListener, cleanupVisibilityListener } = useIncenseTimer()
 const { requestPermission, needsFallback } = useIncenseNotification()
+
+const showHint = computed(() =>
+  store.phase === 'burning' || (store.phase === 'completed' && store.remainingRatio > 0),
+)
+
+const hintText = computed(() => {
+  if (store.phase === 'burning') return '點擊香可熄滅'
+  if (store.phase === 'completed' && store.remainingRatio > 0) return '點擊香可重新燃起'
+  return ''
+})
 
 const ready = ref(false)
 const showFallbackNotice = ref(false)
@@ -112,14 +120,16 @@ async function handleLight() {
   await lightIncense()
 }
 
-function handleContinue() {
-  navigateTo('/worship/prayer')
+async function handleStickClick() {
+  if (store.phase === 'burning') {
+    await extinguish()
+  } else if (store.phase === 'completed' && store.remainingRatio > 0) {
+    await relight()
+  }
 }
 
-async function handleReset() {
-  await handleComplete()
-  store.reset()
-  showFallbackNotice.value = false
+function handleContinue() {
+  navigateTo('/worship/prayer')
 }
 
 // 監聽完成狀態

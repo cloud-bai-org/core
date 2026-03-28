@@ -2,7 +2,9 @@
   <canvas
     ref="canvasRef"
     class="block"
+    :class="{ 'cursor-pointer': isClickable }"
     :style="{ width: `${cssWidth}px`, height: `${cssHeight}px` }"
+    @click="handleClick"
   />
 </template>
 
@@ -38,11 +40,33 @@ const STICK_FULL_LENGTH = 220        // 香體最大長度
 const STICK_WIDTH = 4
 const CENTER_X = cssWidth / 2
 
+const emit = defineEmits<{
+  stickClick: []
+}>()
+
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let dpr = 1
 let animationId: number | null = null
 const particles: SmokeParticle[] = []
 const particleLimit = computed(() => props.maxParticles ?? 40)
+
+const clickable = computed(() =>
+  props.remainingRatio > 0 && (props.phase === 'burning' || props.phase === 'completed'),
+)
+
+function handleClick(e: MouseEvent) {
+  if (!clickable.value || !canvasRef.value) return
+  const rect = canvasRef.value.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+
+  const ty = tipY()
+  const hitX = x >= CENTER_X - 20 && x <= CENTER_X + 20
+  const hitY = y >= ty - 10 && y <= STICK_BASE_Y + 5
+  if (hitX && hitY) {
+    emit('stickClick')
+  }
+}
 
 // 香頂端 y 座標（隨燃燒下降）
 function tipY(): number {

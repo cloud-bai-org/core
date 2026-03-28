@@ -61,9 +61,22 @@ export function useIncenseTimer() {
   async function extinguish() {
     stopProgressTracking()
     store.setPhase('completed')
-    store.remainingRatio = store.remainingRatio // 保留當前長度
     await clearEndTime()
     cancelServiceWorkerTimer()
+  }
+
+  async function relight() {
+    if (store.remainingRatio <= 0) return
+
+    const remainingMs = store.duration * store.remainingRatio
+    const now = Date.now()
+    store.startTime = now - (store.duration - remainingMs)
+    store.endTime = now + remainingMs
+    store.setPhase('burning')
+
+    await saveEndTime(store.endTime)
+    startProgressTracking()
+    notifyServiceWorker()
   }
 
   function cancelServiceWorkerTimer() {
@@ -102,6 +115,7 @@ export function useIncenseTimer() {
   return {
     lightIncense,
     extinguish,
+    relight,
     restoreState,
     handleComplete,
     setupVisibilityListener,
