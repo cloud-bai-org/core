@@ -9,7 +9,7 @@ interface IncenseState {
   remainingRatio: number
 }
 
-const INCENSE_DURATION_MS = 3 * 60 * 1000 // 3 分鐘
+const INCENSE_DURATION_MS = 15 * 60 * 1000 // 15 分鐘（民俗常用估算時間）
 
 export const useIncenseStore = defineStore('incense', {
   state: (): IncenseState => ({
