@@ -112,6 +112,7 @@ const fireIntensity = computed(() => {
 const dragging = ref(false)
 const dragPos = reactive({ x: 0, y: 0 })
 const manualIndex = ref(0)
+const manualBurning = ref(false) // 手動模式下是否有一組正在燒
 
 const remainingManualPapers = computed(() => {
   return store.burnQueue.slice(manualIndex.value)
@@ -166,6 +167,7 @@ function burnOnePaper(): Promise<void> {
 
 function onBurnComplete() {
   isBurning.value = false
+  manualBurning.value = false
   store.advanceToNextPaper()
 }
 
@@ -177,6 +179,7 @@ const FURNACE_HIT = { x: 90, y: 280, w: 120, h: 80 }
 function onPointerDown(e: PointerEvent) {
   if (store.burnMode !== 'manual' || store.phase !== 'burning') return
   if (remainingManualPapers.value.length === 0) return
+  if (manualBurning.value) return // 上一組還在燒，不允許拖曳
 
   const rect = sceneRef.value?.getBoundingClientRect()
   if (!rect) return
@@ -217,6 +220,7 @@ function onPointerUp(e: PointerEvent) {
   ) {
     const paper = remainingManualPapers.value[0]
     if (paper) {
+      manualBurning.value = true
       currentPaper.value = paper
       store.currentBurningIndex = manualIndex.value
       manualIndex.value++
