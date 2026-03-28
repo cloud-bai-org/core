@@ -1,0 +1,16 @@
+[
+  {
+    "id": "deity-001",
+    "name": "天上聖母",
+    "title": "媽祖",
+    "description": "海上守護神，庇佑航海平安",
+    "offerings": ["offering-fruit", "offering-flower", "offering-tea"]
+  },
+  {
+    "id": "deity-002",
+    "name": "關聖帝君",
+    "title": "關公",
+    "description": "忠義武聖，護佑商業興隆",
+    "offerings": ["offering-fruit", "offering-wine"]
+  }
+]

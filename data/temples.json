@@ -1,0 +1,19 @@
+[
+  {
+    "id": "temple-001",
+    "name": "雲瑞宮",
+    "address": "祥雲路 88 號",
+    "description": "主祀天上聖母，歷史悠久的虛構廟宇",
+    "deities": ["deity-001", "deity-002"],
+    "routes": [
+      {
+        "id": "route-001",
+        "name": "標準參拜路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-001", "location": "正殿" },
+          { "order": 2, "deityId": "deity-002", "location": "後殿" }
+        ]
+      }
+    ]
+  }
+]
