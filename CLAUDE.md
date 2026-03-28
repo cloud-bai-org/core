@@ -4,7 +4,7 @@
 
 線上拜拜 PWA 專案——將華人傳統拜拜習俗數位化（焚香、燒金紙、擲筊、供品擺設等），以環保方式完成儀式。
 
-**技術棧**：Vue 3 + Vite 7 + shadcn-vue + Tailwind CSS 4 + Pinia + PWA
+**技術棧**：Nuxt 4 + shadcn-nuxt + Tailwind CSS 4 + @pinia/nuxt + @vite-pwa/nuxt
 
 ## OpenSpec 變更清單與開發順序
 

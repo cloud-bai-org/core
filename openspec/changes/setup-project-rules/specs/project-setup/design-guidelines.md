@@ -1,4 +1,4 @@
-# 台灣廟宇莊嚴風格 Design Guidelines (Dark Theme / shadcn-vue)
+# 台灣廟宇莊嚴風格 Design Guidelines (Dark Theme / shadcn-nuxt)
 
 ## 1. Design Principles（設計原則）
 
@@ -46,16 +46,14 @@
 
 ---
 
-## 4. Implementation（實作指南 - shadcn-vue + Tailwind CSS）
+## 4. Implementation（實作指南 - shadcn-nuxt + Tailwind CSS 4）
 
-### 4.1 CSS Variables (`src/styles/index.css`)
+### 4.1 CSS Variables (`app/assets/css/main.css`)
 
-配合 shadcn-vue 的預設邏輯，將深色主題配置寫入 `:root`：
+配合 shadcn-nuxt 的預設邏輯，將深色主題配置寫入 `:root`：
 
 ```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -103,70 +101,4 @@
 }
 ```
 
-### 4.2 Tailwind Configuration (`tailwind.config.js`)
-
-shadcn-vue 的 CLI 預設會自動對應 CSS 變數，確認 `theme.extend.colors` 設定如下：
-
-```js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ["class"],
-  content: [
-    './pages/**/*.{vue}',
-    './components/**/*.{vue}',
-    './app/**/*.{vue}',
-    './src/**/*.{vue}',
-  ],
-  theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
-    extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-    },
-  },
-}
-```
+> **注意**：Tailwind CSS 4 使用 `@import "tailwindcss"` 取代舊版的 `@tailwind base/components/utilities` 指令。
