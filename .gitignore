@@ -47,6 +47,9 @@ workbox-*.js
 .claude/settings.local.json
 .claude/todos.local.json
 
+# Worktrees
+.worktrees/
+
 # Logs
 *.log
 npm-debug.log*
