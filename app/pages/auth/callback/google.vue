@@ -7,6 +7,7 @@ const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const { syncAfterLogin } = usePostLogin()
 
 const error = ref('')
 const loading = ref(true)
@@ -23,6 +24,7 @@ onMounted(async () => {
     const redirectUri = `${config.public.authRedirectBase}/auth/callback/google`
     const result = await handleGoogleCallback(code, redirectUri)
     authStore.setUser(result.user, result.token)
+    await syncAfterLogin()
     router.replace('/')
   }
   catch {
