@@ -33,21 +33,23 @@
         @burn-complete="onBurnComplete"
       />
 
-      <!-- 手動模式：Canvas 內左下角的金紙堆（拖曳起點） -->
+      <!-- 手動模式：Canvas 內左下角的金紙散堆（拖曳起點） -->
       <div
         v-if="store.burnMode === 'manual' && store.phase === 'burning' && remainingManualPapers.length > 0"
-        class="absolute bottom-2 left-2 flex flex-col items-center gap-1"
+        class="absolute bottom-2 left-2"
       >
-        <div
-          v-for="(paper, idx) in displayedPaperStack"
-          :key="paper.id + idx"
-          class="size-10 rounded border border-amber-400/50 bg-amber-200 shadow-sm"
-          :class="idx === displayedPaperStack.length - 1 && !dragging ? 'animate-pulse cursor-grab' : 'opacity-60'"
-          :style="{ transform: `translateY(${idx * -3}px)` }"
-        >
-          <div class="m-1.5 size-5 rounded-sm bg-amber-400/60" />
+        <div class="relative h-16 w-20">
+          <div
+            v-for="(paper, idx) in displayedPaperStack"
+            :key="paper.id + idx"
+            class="absolute size-10 rounded border border-amber-400/50 bg-amber-200 shadow-sm"
+            :class="idx === displayedPaperStack.length - 1 && !dragging ? 'animate-pulse cursor-grab' : ''"
+            :style="scatterStyle(idx)"
+          >
+            <div class="m-1.5 size-5 rounded-sm bg-amber-400/60" />
+          </div>
         </div>
-        <span class="mt-1 text-xs text-muted-foreground">
+        <span class="mt-1 block text-center text-xs text-muted-foreground">
           剩餘 {{ remainingManualPapers.length }} 組
         </span>
       </div>
@@ -115,10 +117,27 @@ const remainingManualPapers = computed(() => {
   return store.burnQueue.slice(manualIndex.value)
 })
 
-// 最多顯示 5 個堆疊的金紙圖示
+// 最多顯示 5 張散開的金紙
 const displayedPaperStack = computed(() => {
   return remainingManualPapers.value.slice(0, 5)
 })
+
+// 預先產生每個位置的隨機散開參數（固定種子避免每次 render 跳動）
+const scatterSeeds = Array.from({ length: 5 }, () => ({
+  x: (Math.random() - 0.5) * 20,
+  y: (Math.random() - 0.5) * 16,
+  r: (Math.random() - 0.5) * 24,
+}))
+
+function scatterStyle(idx: number) {
+  const seed = scatterSeeds[idx]
+  return {
+    left: `${10 + seed.x}px`,
+    top: `${8 + seed.y}px`,
+    transform: `rotate(${seed.r}deg)`,
+    zIndex: idx,
+  }
+}
 
 // ---- 自動焚燒模式 ----
 
