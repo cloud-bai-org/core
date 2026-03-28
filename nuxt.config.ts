@@ -57,6 +57,7 @@ export default defineNuxtConfig({
     },
     workbox: {
       navigateFallback: '/',
+      importScripts: ['/sw-custom.js'],
     },
   },
 
