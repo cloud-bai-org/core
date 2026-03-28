@@ -14,7 +14,7 @@ export const RESULT_LABELS: Record<DivinationResult, { name: string; description
 function generateResult(): DivinationResult {
   const array = new Uint32Array(1)
   crypto.getRandomValues(array)
-  const value = array[0] / (0xFFFFFFFF + 1)
+  const value = array[0]! / (0xFFFFFFFF + 1)
 
   if (value < 0.5) return 'holy'
   if (value < 0.75) return 'laughing'

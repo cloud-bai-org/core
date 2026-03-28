@@ -115,11 +115,14 @@ function onAnimationComplete() {
 }
 
 function onTouchStart(e: TouchEvent) {
-  touchStartY = e.touches[0].clientY
+  const touch = e.touches[0]
+  if (touch) touchStartY = touch.clientY
 }
 
 function onTouchEnd(e: TouchEvent) {
-  const touchEndY = e.changedTouches[0].clientY
+  const touch = e.changedTouches[0]
+  if (!touch) return
+  const touchEndY = touch.clientY
   const swipeDistance = touchStartY - touchEndY
   // 向上滑動超過 50px 觸發擲筊
   if (swipeDistance > 50 && !store.isAnimating) {

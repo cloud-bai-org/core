@@ -26,8 +26,8 @@ const emit = defineEmits<{
 const { $gsap } = useNuxtApp()
 
 const sceneRef = ref<HTMLElement | null>(null)
-const leftBlockRef = ref<InstanceType<typeof DivinationBlock> | null>(null)
-const rightBlockRef = ref<InstanceType<typeof DivinationBlock> | null>(null)
+const leftBlockRef = ref<{ blockRef: HTMLElement | null } | null>(null)
+const rightBlockRef = ref<{ blockRef: HTMLElement | null } | null>(null)
 
 // 根據結果決定筊杯朝向
 // holy: 一正一反, laughing: 兩面朝上(平面), negative: 兩面朝下(凸面)
