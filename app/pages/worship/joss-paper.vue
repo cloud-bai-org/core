@@ -6,7 +6,7 @@
     <template v-if="store.phase === 'selecting'">
       <p class="text-sm text-muted-foreground">選擇要焚燒的金紙種類</p>
       <div class="w-full max-w-sm">
-        <JossPaperPaperSelector />
+        <JossPaperSelector />
       </div>
       <Button
         size="lg"
