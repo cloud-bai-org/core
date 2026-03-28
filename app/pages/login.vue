@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { getGoogleAuthUrl } from '~/services/google-auth'
-import { getLineAuthUrl } from '~/services/line-auth'
+import { getGoogleAuthUrl, getLineAuthUrl } from '~/services/auth'
 
 const config = useRuntimeConfig()
 const authStore = useAuthStore()

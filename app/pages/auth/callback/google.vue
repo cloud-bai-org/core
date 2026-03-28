@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { handleGoogleCallback } from '~/services/google-auth'
+import { authenticateWithGoogle } from '~/services/auth'
 
 definePageMeta({ layout: false })
 
@@ -22,7 +22,7 @@ onMounted(async () => {
 
   try {
     const redirectUri = `${config.public.authRedirectBase}/auth/callback/google`
-    const result = await handleGoogleCallback(code, redirectUri)
+    const result = await authenticateWithGoogle(code, redirectUri)
     authStore.setUser(result.user, result.token)
     await syncAfterLogin()
     router.replace('/')

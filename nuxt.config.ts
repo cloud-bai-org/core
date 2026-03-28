@@ -63,6 +63,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/login': { ssr: false },
+    '/auth/**': { ssr: false },
     '/settings': { ssr: false },
     '/worship/**': { ssr: false },
     '/temple/**': { ssr: false },

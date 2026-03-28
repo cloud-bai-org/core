@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { handleLineCallback } from '~/services/line-auth'
+import { authenticateWithLine } from '~/services/auth'
 
 definePageMeta({ layout: false })
 
@@ -24,7 +24,7 @@ onMounted(async () => {
 
   try {
     const redirectUri = `${config.public.authRedirectBase}/auth/callback/line`
-    const result = await handleLineCallback(code, state, redirectUri)
+    const result = await authenticateWithLine(code, state, redirectUri)
     authStore.setUser(result.user, result.token)
     await syncAfterLogin()
     router.replace('/')
