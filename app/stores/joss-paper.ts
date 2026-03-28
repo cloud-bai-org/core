@@ -6,6 +6,13 @@ export interface JossPaperType {
   name: string
   description: string
   sheetsPerBundle: number // 每組張數
+  // 視覺外觀
+  visual: {
+    paperColor: string   // 底紙顏色
+    foilColor: string    // 箔片顏色
+    foilShine: string    // 箔片光澤高亮色
+    borderColor: string  // 紙張邊緣色
+  }
   // 粒子參數
   particle: {
     flameColors: [string, string, string] // 內焰、外焰、尖端
@@ -23,6 +30,12 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     name: '壽金',
     description: '祭拜天公、三界公等天神使用',
     sheetsPerBundle: 100,
+    visual: {
+      paperColor: '#F5DEB3',
+      foilColor: '#DAA520',
+      foilShine: '#FFD700',
+      borderColor: '#D2B48C',
+    },
     particle: {
       flameColors: ['#FFD700', '#FF8C00', '#FF4500'],
       ashColor: '#8B8682',
@@ -36,6 +49,12 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     name: '刈金',
     description: '祭拜一般神明使用',
     sheetsPerBundle: 100,
+    visual: {
+      paperColor: '#FAEBD7',
+      foilColor: '#CD950C',
+      foilShine: '#EEC900',
+      borderColor: '#C4A882',
+    },
     particle: {
       flameColors: ['#FFC125', '#FF7F00', '#FF3030'],
       ashColor: '#808080',
@@ -49,6 +68,12 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     name: '福金',
     description: '祭拜土地公、地基主使用',
     sheetsPerBundle: 100,
+    visual: {
+      paperColor: '#FFF8DC',
+      foilColor: '#B8860B',
+      foilShine: '#DAA520',
+      borderColor: '#D2C6A5',
+    },
     particle: {
       flameColors: ['#FFE4B5', '#FFA500', '#FF6347'],
       ashColor: '#9E9E9E',
@@ -62,6 +87,12 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     name: '大百壽金',
     description: '祭拜玉皇大帝等最高階神明使用',
     sheetsPerBundle: 50,
+    visual: {
+      paperColor: '#FFFACD',
+      foilColor: '#FFD700',
+      foilShine: '#FFEC8B',
+      borderColor: '#EEE8AA',
+    },
     particle: {
       flameColors: ['#FFFACD', '#FFD700', '#FF8C00'],
       ashColor: '#A9A9A9',
@@ -75,6 +106,12 @@ export const JOSS_PAPER_TYPES: JossPaperType[] = [
     name: '銀紙',
     description: '祭拜祖先、好兄弟使用',
     sheetsPerBundle: 50,
+    visual: {
+      paperColor: '#F0EDE4',
+      foilColor: '#A8A8A8',
+      foilShine: '#C0C0C0',
+      borderColor: '#C8C8C0',
+    },
     particle: {
       flameColors: ['#C0C0C0', '#B0B0B0', '#FF6347'],
       ashColor: '#696969',

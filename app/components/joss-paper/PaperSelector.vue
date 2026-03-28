@@ -9,11 +9,29 @@
         : 'border-border'"
     >
       <div class="flex items-center gap-3">
-        <!-- 金紙色塊預覽 -->
+        <!-- 金紙擬真預覽 -->
         <div
-          class="size-10 shrink-0 rounded"
-          :style="{ background: paperGradient(paper) }"
-        />
+          class="relative flex size-12 shrink-0 items-center justify-center rounded-sm shadow-sm"
+          :style="{
+            backgroundColor: paper.visual.paperColor,
+            border: `1px solid ${paper.visual.borderColor}`,
+          }"
+        >
+          <!-- 箔片 -->
+          <div
+            class="size-6 rounded-[1px]"
+            :style="{
+              background: `linear-gradient(135deg, ${paper.visual.foilColor} 0%, ${paper.visual.foilShine} 45%, ${paper.visual.foilColor} 55%, ${paper.visual.foilShine} 100%)`,
+              boxShadow: `inset 0 0 3px ${paper.visual.foilShine}40`,
+            }"
+          />
+          <!-- 紙張紋理 -->
+          <div
+            class="pointer-events-none absolute inset-0 rounded-sm opacity-20"
+            style="background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px)"
+          />
+        </div>
+
         <div class="min-w-0 flex-1">
           <div class="font-medium">{{ paper.name }}</div>
           <p class="text-sm text-muted-foreground">{{ paper.description }}</p>
@@ -47,7 +65,6 @@
 
 <script setup lang="ts">
 import { JOSS_PAPER_TYPES, useJossPaperStore } from '~/stores/joss-paper'
-import type { JossPaperType } from '~/stores/joss-paper'
 
 const store = useJossPaperStore()
 const papers = JOSS_PAPER_TYPES
@@ -65,10 +82,5 @@ function decrement(id: string) {
   if (current > 0) {
     store.setBundles(id, current - 1)
   }
-}
-
-function paperGradient(paper: JossPaperType) {
-  const [c1, c2] = paper.particle.flameColors
-  return `linear-gradient(135deg, ${c1}, ${c2})`
 }
 </script>
