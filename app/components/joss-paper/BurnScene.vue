@@ -252,14 +252,14 @@ async function autoCompleteRemaining() {
   await waitForManualBurnDone()
 
   store.burnMode = 'auto'
-  const remaining = store.burnQueue.slice(manualIndex.value)
+  const startIdx = manualIndex.value
+  const remaining = store.burnQueue.slice(startIdx)
   for (let i = 0; i < remaining.length; i++) {
     if (store.phase !== 'burning') break
 
-    const idx = manualIndex.value + i
+    const idx = startIdx + i
     store.currentBurningIndex = idx
     currentPaper.value = remaining[i]
-    manualIndex.value = idx + 1
 
     await burnOnePaper()
   }
