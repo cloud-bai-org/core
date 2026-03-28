@@ -52,9 +52,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // TODO: 待 shadcn-vue SSR 相容性穩定後，可將 / 改為 prerender、/eco-impact 改為 SSR
-  ssr: false,
-
   routeRules: {
     '/': { prerender: true },
     '/login': { ssr: false },
