@@ -2,7 +2,9 @@
   "name": "cloud-bai-core",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@10.8.1",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
