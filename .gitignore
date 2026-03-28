@@ -4,6 +4,10 @@ node_modules/
 # Build output
 dist/
 dist-ssr/
+.output/
+
+# Nuxt
+.nuxt/
 
 # Vite
 *.local
@@ -31,11 +35,8 @@ Thumbs.db
 # Testing
 coverage/
 
-# TypeScript / unplugin generated
+# TypeScript
 *.tsbuildinfo
-auto-imports.d.ts
-components.d.ts
-typed-router.d.ts
 
 # PWA
 dev-dist/
