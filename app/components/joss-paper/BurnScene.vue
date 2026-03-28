@@ -233,8 +233,24 @@ function onPointerUp(e: PointerEvent) {
   e.preventDefault()
 }
 
+// 等待手動焚燒中的那組完成
+function waitForManualBurnDone(): Promise<void> {
+  if (!manualBurning.value) return Promise.resolve()
+  return new Promise((resolve) => {
+    const unwatch = watch(manualBurning, (val) => {
+      if (!val) {
+        unwatch()
+        resolve()
+      }
+    })
+  })
+}
+
 // 自動完成剩餘金紙
 async function autoCompleteRemaining() {
+  // 先等手動拖入的那組燒完
+  await waitForManualBurnDone()
+
   store.burnMode = 'auto'
   const remaining = store.burnQueue.slice(manualIndex.value)
   for (let i = 0; i < remaining.length; i++) {
