@@ -237,12 +237,14 @@ export const useJossPaperStore = defineStore('joss-paper', {
 
     advanceToNextPaper() {
       this.totalBurned++
-      if (this.currentBurningIndex + 1 >= this.burnQueue.length) {
-        this.phase = 'completed'
-      } else {
+      if (this.currentBurningIndex + 1 < this.burnQueue.length) {
         this.currentBurningIndex++
         this.burnProgress = 0
       }
+    },
+
+    complete() {
+      this.phase = 'completed'
     },
 
     proceedToModeSelect() {

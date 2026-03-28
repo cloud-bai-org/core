@@ -140,6 +140,14 @@ function scatterStyle(idx: number) {
   }
 }
 
+// ---- 全部燒完後延遲轉場 ----
+
+function delayThenComplete() {
+  setTimeout(() => {
+    store.complete()
+  }, 1200)
+}
+
 // ---- 自動焚燒模式 ----
 
 async function startAutoBurn() {
@@ -150,6 +158,9 @@ async function startAutoBurn() {
     currentPaper.value = store.burnQueue[i]
 
     await burnOnePaper()
+  }
+  if (store.phase === 'burning') {
+    delayThenComplete()
   }
 }
 
@@ -169,6 +180,11 @@ function onBurnComplete() {
   isBurning.value = false
   manualBurning.value = false
   store.advanceToNextPaper()
+
+  // 手動模式下燒完最後一組，延遲轉場
+  if (store.burnMode === 'manual' && store.totalBurned >= store.burnQueue.length) {
+    delayThenComplete()
+  }
 }
 
 // ---- 手動投入模式 ----
@@ -262,6 +278,9 @@ async function autoCompleteRemaining() {
     currentPaper.value = remaining[i]
 
     await burnOnePaper()
+  }
+  if (store.phase === 'burning') {
+    delayThenComplete()
   }
 }
 
