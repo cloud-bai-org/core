@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-medium">焚香</h1>
 
     <!-- 焚香場景 -->
-    <IncenseScene :max-particles="adaptiveParticles" />
+    <IncenseScene v-if="ready" :max-particles="adaptiveParticles" />
 
     <!-- 狀態提示 -->
     <p class="text-sm text-muted-foreground">
@@ -62,12 +62,14 @@ const store = useIncenseStore()
 const { lightIncense, restoreState, handleComplete, setupVisibilityListener, cleanupVisibilityListener } = useIncenseTimer()
 const { requestPermission, needsFallback } = useIncenseNotification()
 
+const ready = ref(false)
 const showFallbackNotice = ref(false)
 const adaptiveParticles = ref(40)
 
 const remainingText = computed(() => {
-  if (!store.endTime) return ''
-  const remaining = Math.max(0, store.endTime - Date.now())
+  if (!store.endTime || !store.startTime) return ''
+  const total = store.endTime - store.startTime
+  const remaining = Math.max(0, total * store.remainingRatio)
   const minutes = Math.floor(remaining / 60000)
   const seconds = Math.floor((remaining % 60000) / 1000)
   return `${minutes}:${seconds.toString().padStart(2, '0')}`
@@ -118,6 +120,7 @@ onMounted(async () => {
   detectPerformance()
   setupVisibilityListener()
   await restoreState()
+  ready.value = true
 })
 
 onBeforeUnmount(() => {
