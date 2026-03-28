@@ -58,6 +58,21 @@ export function useIncenseTimer() {
     await clearEndTime()
   }
 
+  async function extinguish() {
+    stopProgressTracking()
+    store.setPhase('completed')
+    store.remainingRatio = store.remainingRatio // 保留當前長度
+    await clearEndTime()
+    cancelServiceWorkerTimer()
+  }
+
+  function cancelServiceWorkerTimer() {
+    if (!('serviceWorker' in navigator)) return
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.active?.postMessage({ type: 'INCENSE_TIMER_CANCEL' })
+    })
+  }
+
   function notifyServiceWorker() {
     if (!('serviceWorker' in navigator) || !store.endTime) return
 
@@ -86,6 +101,7 @@ export function useIncenseTimer() {
 
   return {
     lightIncense,
+    extinguish,
     restoreState,
     handleComplete,
     setupVisibilityListener,

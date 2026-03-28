@@ -32,6 +32,22 @@
       </Button>
 
       <Button
+        v-if="store.phase === 'burning'"
+        variant="outline"
+        @click="extinguish"
+      >
+        熄香
+      </Button>
+
+      <Button
+        v-if="store.phase === 'burning'"
+        size="lg"
+        @click="handleContinue"
+      >
+        跳過，繼續儀式
+      </Button>
+
+      <Button
         v-if="store.phase === 'completed'"
         size="lg"
         @click="handleContinue"
@@ -59,7 +75,7 @@ import IncenseScene from '~/components/incense/IncenseScene.vue'
 definePageMeta({ capability: 'incense-simulation' })
 
 const store = useIncenseStore()
-const { lightIncense, restoreState, handleComplete, setupVisibilityListener, cleanupVisibilityListener } = useIncenseTimer()
+const { lightIncense, extinguish, restoreState, handleComplete, setupVisibilityListener, cleanupVisibilityListener } = useIncenseTimer()
 const { requestPermission, needsFallback } = useIncenseNotification()
 
 const ready = ref(false)
