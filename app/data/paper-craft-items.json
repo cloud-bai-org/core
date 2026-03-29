@@ -1,0 +1,71 @@
+{
+  "categories": [
+    {
+      "id": "3c",
+      "name": "3C 產品",
+      "icon": "smartphone",
+      "items": [
+        { "id": "3c-phone", "name": "智慧型手機" },
+        { "id": "3c-tablet", "name": "平板電腦" },
+        { "id": "3c-laptop", "name": "筆記型電腦" },
+        { "id": "3c-tv", "name": "液晶電視" },
+        { "id": "3c-camera", "name": "相機" }
+      ]
+    },
+    {
+      "id": "house",
+      "name": "房屋",
+      "icon": "home",
+      "items": [
+        { "id": "house-mansion", "name": "豪華別墅" },
+        { "id": "house-apartment", "name": "公寓大樓" },
+        { "id": "house-traditional", "name": "三合院" },
+        { "id": "house-garden", "name": "花園洋房" }
+      ]
+    },
+    {
+      "id": "vehicle",
+      "name": "車輛",
+      "icon": "car",
+      "items": [
+        { "id": "vehicle-sedan", "name": "轎車" },
+        { "id": "vehicle-suv", "name": "休旅車" },
+        { "id": "vehicle-motorcycle", "name": "機車" },
+        { "id": "vehicle-bicycle", "name": "腳踏車" }
+      ]
+    },
+    {
+      "id": "luxury",
+      "name": "精品",
+      "icon": "gem",
+      "items": [
+        { "id": "luxury-watch", "name": "名錶" },
+        { "id": "luxury-bag", "name": "名牌包" },
+        { "id": "luxury-jewelry", "name": "珠寶首飾" },
+        { "id": "luxury-perfume", "name": "香水" }
+      ]
+    },
+    {
+      "id": "daily",
+      "name": "日用品",
+      "icon": "shirt",
+      "items": [
+        { "id": "daily-clothes", "name": "衣物套裝" },
+        { "id": "daily-shoes", "name": "鞋子" },
+        { "id": "daily-furniture", "name": "傢俱組" },
+        { "id": "daily-appliance", "name": "家電用品" }
+      ]
+    },
+    {
+      "id": "food",
+      "name": "美食",
+      "icon": "utensils",
+      "items": [
+        { "id": "food-feast", "name": "滿漢全席" },
+        { "id": "food-fruit", "name": "水果籃" },
+        { "id": "food-snack", "name": "零食禮盒" },
+        { "id": "food-tea", "name": "茶葉禮盒" }
+      ]
+    }
+  ]
+}
