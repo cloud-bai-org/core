@@ -15,11 +15,27 @@ export interface Deity {
   offerings: string[]
 }
 
+export type OfferingCategoryId = 'fruit' | 'flower' | 'food' | 'beverage' | 'meat' | 'pastry' | 'other'
+
+export interface OfferingCategory {
+  id: OfferingCategoryId
+  name: string
+  icon: string
+}
+
 export interface Offering {
   id: string
   name: string
-  category: 'fruit' | 'flower' | 'food' | 'beverage' | 'other'
+  category: OfferingCategoryId
+  emoji: string
   description: string
+}
+
+export interface AltarOffering {
+  instanceId: string
+  offeringId: string
+  x: number
+  y: number
 }
 
 export interface WorshipRoute {
