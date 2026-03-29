@@ -1,0 +1,58 @@
+[
+  {
+    "id": "first-checkin",
+    "name": "初次參拜",
+    "description": "完成第一次廟宇打卡",
+    "icon": "⛩️",
+    "condition": { "type": "checkin_count", "count": 1 }
+  },
+  {
+    "id": "pilgrim-5",
+    "name": "虔誠信徒",
+    "description": "累計打卡 5 次",
+    "icon": "🙏",
+    "condition": { "type": "checkin_count", "count": 5 }
+  },
+  {
+    "id": "pilgrim-10",
+    "name": "朝聖達人",
+    "description": "累計打卡 10 次",
+    "icon": "✨",
+    "condition": { "type": "checkin_count", "count": 10 }
+  },
+  {
+    "id": "explorer-3",
+    "name": "廟宇探索者",
+    "description": "造訪 3 間不同廟宇",
+    "icon": "🗺️",
+    "condition": { "type": "unique_temples", "count": 3 }
+  },
+  {
+    "id": "explorer-all",
+    "name": "踏遍名剎",
+    "description": "造訪所有廟宇",
+    "icon": "🏆",
+    "condition": { "type": "unique_temples", "count": 8 }
+  },
+  {
+    "id": "all-purposes",
+    "name": "六願圓滿",
+    "description": "完成所有祈願類型",
+    "icon": "🌟",
+    "condition": { "type": "all_purposes" }
+  },
+  {
+    "id": "study-master",
+    "name": "金榜題名",
+    "description": "祈求學業 3 次",
+    "icon": "📚",
+    "condition": { "type": "specific_purpose", "purpose": "study", "count": 3 }
+  },
+  {
+    "id": "wealth-master",
+    "name": "財源廣進",
+    "description": "祈求財運 3 次",
+    "icon": "💰",
+    "condition": { "type": "specific_purpose", "purpose": "wealth", "count": 3 }
+  }
+]
