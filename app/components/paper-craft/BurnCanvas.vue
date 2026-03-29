@@ -16,6 +16,7 @@ import {
   renderPaperCraftParticles,
   getPaperCraftLevelConfig,
 } from './particles'
+import { drawItemShape } from './item-shapes'
 import type { BurnListItem } from '~/stores/paper-craft'
 import type { AnimationLevel } from '~/stores/paper-craft'
 
@@ -175,70 +176,30 @@ function drawDroppingItem(ctx: CanvasRenderingContext2D) {
   ctx.translate(dropItem.x, dropItem.y)
   ctx.rotate(dropItem.rotation)
 
-  const w = dropItem.width
-  const h = dropItem.height
+  // 使用物品專屬造型繪製
+  const scale = 1.4 // 紙紮物品比金紙大
+  drawItemShape(
+    ctx,
+    props.item.id,
+    props.item.categoryId,
+    scale,
+    props.item.isCustom ? props.item.name : undefined,
+  )
 
-  if (props.item.isCustom) {
-    // 自訂物品：通用紙紮外觀（淺棕色摺紙）+ 文字標籤
-    ctx.fillStyle = '#E8D5B7'
-    ctx.fillRect(-w / 2, -h / 2, w, h)
-    ctx.strokeStyle = '#C4A882'
-    ctx.lineWidth = 1.5
-    ctx.strokeRect(-w / 2, -h / 2, w, h)
-    // 摺痕裝飾
-    ctx.strokeStyle = '#D2C6A5'
-    ctx.lineWidth = 0.5
-    ctx.beginPath()
-    ctx.moveTo(-w / 2, 0)
-    ctx.lineTo(w / 2, 0)
-    ctx.stroke()
-    // 文字標籤
-    ctx.fillStyle = '#6B5B47'
-    ctx.font = '9px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    const displayName = props.item.name.length > 4 ? props.item.name.slice(0, 4) + '..' : props.item.name
-    ctx.fillText(displayName, 0, -h / 6)
-  } else {
-    // 預設物品：彩色紙紮外觀
-    const colors = getCategoryColors(props.item.categoryId)
-    ctx.fillStyle = colors.bg
-    ctx.fillRect(-w / 2, -h / 2, w, h)
-    ctx.strokeStyle = colors.border
-    ctx.lineWidth = 1.5
-    ctx.strokeRect(-w / 2, -h / 2, w, h)
-    // 物品圖案裝飾區
-    ctx.fillStyle = colors.accent
-    ctx.fillRect(-w / 4, -h / 4, w / 2, h / 3)
-    // 物品名稱
-    ctx.fillStyle = colors.text
-    ctx.font = '8px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    const displayName = props.item.name.length > 4 ? props.item.name.slice(0, 4) + '..' : props.item.name
-    ctx.fillText(displayName, 0, h / 4)
-  }
-
-  // 燃燒邊緣效果
+  // 燃燒邊緣光暈效果
   if (burnStage.value >= 2) {
+    ctx.globalAlpha = dropItem.opacity * 0.6
+    ctx.shadowColor = '#FF5000'
+    ctx.shadowBlur = 12
     ctx.strokeStyle = `rgba(255, 80, 0, ${dropItem.opacity})`
-    ctx.lineWidth = 2.5
-    ctx.strokeRect(-w / 2, -h / 2, w, h)
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.arc(0, 0, 22 * scale, 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.shadowBlur = 0
   }
 
   ctx.restore()
-}
-
-function getCategoryColors(categoryId: string) {
-  const map: Record<string, { bg: string, border: string, accent: string, text: string }> = {
-    '3c': { bg: '#E8E8F0', border: '#9090B0', accent: '#6060A0', text: '#404060' },
-    house: { bg: '#F0E0D0', border: '#C0A080', accent: '#D4A060', text: '#604020' },
-    vehicle: { bg: '#D8E8F0', border: '#80A0C0', accent: '#4080B0', text: '#203050' },
-    luxury: { bg: '#F0E0F0', border: '#C090C0', accent: '#D080D0', text: '#604060' },
-    daily: { bg: '#E0F0E0', border: '#80C080', accent: '#60A060', text: '#204020' },
-    food: { bg: '#F8F0D8', border: '#D0C080', accent: '#E0B040', text: '#605020' },
-  }
-  return map[categoryId] ?? { bg: '#E8D5B7', border: '#C4A882', accent: '#B8A070', text: '#6B5B47' }
 }
 
 function emitParticles() {
