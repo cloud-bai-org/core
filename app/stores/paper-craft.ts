@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia'
 import catalogData from '~/data/paper-craft-items.json'
 
 // 紙紮物品分類
@@ -49,99 +48,116 @@ export const ALL_PRESET_ITEMS: PaperCraftItem[] = PAPER_CRAFT_CATEGORIES.flatMap
 // 紙紮物品等效的實體紙張克數（統一值，紙紮物品較大）
 const PAPER_CRAFT_GRAMS = 30
 
-export const usePaperCraftStore = defineStore('paper-craft', {
-  state: () => ({
-    phase: 'selecting' as PaperCraftPhase,
-    burnList: [] as BurnListItem[],
-    animationLevel: 'standard' as 'fine' | 'standard' | 'simple',
-    // 焚燒進度
-    currentBurningIndex: 0,
-    totalBurned: 0,
-  }),
+export type AnimationLevel = 'fine' | 'standard' | 'simple'
 
-  getters: {
-    totalItems(): number {
-      return this.burnList.length
-    },
+export const usePaperCraftStore = defineStore('paper-craft', () => {
+  const phase = ref<PaperCraftPhase>('selecting')
+  const burnList = ref<BurnListItem[]>([])
+  const animationLevel = ref<AnimationLevel>('standard')
+  const currentBurningIndex = ref(0)
+  const totalBurned = ref(0)
 
-    currentBurningItem(): BurnListItem | null {
-      return this.burnList[this.currentBurningIndex] ?? null
-    },
+  // Getters
+  const totalItems = computed(() => burnList.value.length)
 
-    totalPaperGrams(): number {
-      return this.burnList.length * PAPER_CRAFT_GRAMS
-    },
+  const currentBurningItem = computed(
+    () => burnList.value[currentBurningIndex.value] ?? null,
+  )
 
-    particleConfig(): { maxParticles: number, targetFps: number } {
-      switch (this.animationLevel) {
-        case 'fine': return { maxParticles: 200, targetFps: 60 }
-        case 'standard': return { maxParticles: 100, targetFps: 30 }
-        case 'simple': return { maxParticles: 40, targetFps: 30 }
-      }
-    },
-  },
+  const totalPaperGrams = computed(() => burnList.value.length * PAPER_CRAFT_GRAMS)
 
-  actions: {
-    addItem(item: PaperCraftItem) {
-      // 預設物品：避免重複加入
-      if (!item.isCustom && this.burnList.some(i => i.id === item.id)) return
-      this.burnList.push({
-        id: item.id,
-        name: item.name,
-        categoryId: item.categoryId,
-        isCustom: item.isCustom,
-      })
-    },
+  const particleConfig = computed(() => {
+    switch (animationLevel.value) {
+      case 'fine': return { maxParticles: 200, targetFps: 60 }
+      case 'standard': return { maxParticles: 100, targetFps: 30 }
+      case 'simple': return { maxParticles: 40, targetFps: 30 }
+    }
+  })
 
-    removeItem(index: number) {
-      this.burnList.splice(index, 1)
-    },
+  // Actions
+  function addItem(item: PaperCraftItem) {
+    if (!item.isCustom && burnList.value.some(i => i.id === item.id)) return
+    burnList.value.push({
+      id: item.id,
+      name: item.name,
+      categoryId: item.categoryId,
+      isCustom: item.isCustom,
+    })
+  }
 
-    clearList() {
-      this.burnList = []
-    },
+  function removeItem(index: number) {
+    burnList.value.splice(index, 1)
+  }
 
-    addCustomItem(name: string) {
-      const trimmed = name.trim()
-      if (!trimmed) return
-      this.burnList.push({
-        id: `custom-${Date.now()}`,
-        name: trimmed,
-        categoryId: 'custom',
-        isCustom: true,
-      })
-    },
+  function clearList() {
+    burnList.value = []
+  }
 
-    isItemSelected(itemId: string): boolean {
-      return this.burnList.some(i => i.id === itemId)
-    },
+  function addCustomItem(name: string) {
+    const trimmed = name.trim()
+    if (!trimmed) return
+    burnList.value.push({
+      id: `custom-${Date.now()}`,
+      name: trimmed,
+      categoryId: 'custom',
+      isCustom: true,
+    })
+  }
 
-    setAnimationLevel(level: 'fine' | 'standard' | 'simple') {
-      this.animationLevel = level
-    },
+  function isItemSelected(itemId: string): boolean {
+    return burnList.value.some(i => i.id === itemId)
+  }
 
-    startBurning() {
-      this.phase = 'burning'
-      this.currentBurningIndex = 0
-      this.totalBurned = 0
-    },
+  function setAnimationLevel(level: AnimationLevel) {
+    animationLevel.value = level
+  }
 
-    advanceToNext() {
-      this.totalBurned++
-      if (this.currentBurningIndex + 1 < this.burnList.length) {
-        this.currentBurningIndex++
-      }
-    },
+  function startBurning() {
+    phase.value = 'burning'
+    currentBurningIndex.value = 0
+    totalBurned.value = 0
+  }
 
-    complete() {
-      this.phase = 'completed'
-    },
+  function advanceToNext() {
+    totalBurned.value++
+    if (currentBurningIndex.value + 1 < burnList.value.length) {
+      currentBurningIndex.value++
+    }
+  }
 
-    reset() {
-      this.phase = 'selecting'
-      this.burnList = []
-      this.currentBurningIndex = 0
-      this.totalBurned = 0
-    },
-  },
+  function complete() {
+    phase.value = 'completed'
+  }
+
+  function reset() {
+    phase.value = 'selecting'
+    burnList.value = []
+    currentBurningIndex.value = 0
+    totalBurned.value = 0
+  }
+
+  return {
+    // State
+    phase,
+    burnList,
+    animationLevel,
+    currentBurningIndex,
+    totalBurned,
+    // Getters
+    totalItems,
+    currentBurningItem,
+    totalPaperGrams,
+    particleConfig,
+    // Actions
+    addItem,
+    removeItem,
+    clearList,
+    addCustomItem,
+    isItemSelected,
+    setAnimationLevel,
+    startBurning,
+    advanceToNext,
+    complete,
+    reset,
+  }
 })

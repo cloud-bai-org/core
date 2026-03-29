@@ -17,7 +17,7 @@ import {
   getPaperCraftLevelConfig,
 } from './particles'
 import type { BurnListItem } from '~/stores/paper-craft'
-import type { AnimationLevel } from '~/stores/joss-paper'
+import type { AnimationLevel } from '~/stores/paper-craft'
 
 const props = defineProps<{
   item: BurnListItem | null

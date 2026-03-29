@@ -1,4 +1,4 @@
-import type { AnimationLevel } from '~/stores/joss-paper'
+import type { AnimationLevel } from '~/stores/paper-craft'
 
 // 複用 joss-paper 的粒子池與基礎粒子型別
 export {
@@ -79,7 +79,7 @@ export function createPaperCraftSmoke(
 // ---- 紙紮專屬渲染器 ----
 
 function lerpColor(a: string, b: string, t: number): string {
-  const parseHex = (hex: string) => {
+  const parseHex = (hex: string): [number, number, number] => {
     const h = hex.replace('#', '')
     return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]
   }
@@ -105,8 +105,8 @@ export function renderPaperCraftParticles(
       const nextIdx = Math.min(2, colorIdx + 1)
       const localT = (progress * 3) - colorIdx
       const color = lerpColor(
-        PAPER_CRAFT_FLAME_COLORS[colorIdx],
-        PAPER_CRAFT_FLAME_COLORS[nextIdx],
+        PAPER_CRAFT_FLAME_COLORS[colorIdx]!,
+        PAPER_CRAFT_FLAME_COLORS[nextIdx]!,
         localT,
       )
       const size = fp.size * (1 - progress * 0.5)

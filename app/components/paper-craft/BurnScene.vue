@@ -37,7 +37,7 @@
 import BurnCanvas from './BurnCanvas.vue'
 import { usePaperCraftStore } from '~/stores/paper-craft'
 import type { BurnListItem } from '~/stores/paper-craft'
-import type { AnimationLevel } from '~/stores/joss-paper'
+import type { AnimationLevel } from '~/stores/paper-craft'
 
 const store = usePaperCraftStore()
 
@@ -79,7 +79,7 @@ async function startAutoBurn() {
     if (store.phase !== 'burning') break
 
     store.currentBurningIndex = i
-    currentItem.value = store.burnList[i]
+    currentItem.value = store.burnList[i] ?? null
 
     await burnOneItem()
   }
