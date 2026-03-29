@@ -1,10 +1,10 @@
-import type { Temple } from '~/types/data'
+import type { Temple } from '@@/types/data'
 import type {
   AchievementBadge,
   CheckinRecord,
   EarnedBadge,
   PrayerPurpose,
-} from '~/types/temple-checkin'
+} from '@@/types/temple-checkin'
 import templesData from '~/data/temples.json'
 import achievementsData from '~/data/achievements.json'
 import deitiesRawData from '~/data/deities.json'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Temple } from '~/types/data'
+import type { Temple } from '@@/types/data'
 
 definePageMeta({ capability: 'temple-checkin' })
 

@@ -35,7 +35,7 @@ async function initMap() {
   const L = await import('leaflet')
 
   // 修正 Leaflet 預設 icon 路徑問題
-  delete (L.Icon.Default.prototype as Record<string, unknown>)._getIconUrl
+  delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl
   L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',

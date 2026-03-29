@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PrayerPurpose } from '~/types/temple-checkin'
+import type { PrayerPurpose } from '@@/types/temple-checkin'
 import { PRAYER_PURPOSE_LABELS, deitiesData } from '~/stores/temple-checkin'
 
 definePageMeta({ capability: 'temple-checkin' })
