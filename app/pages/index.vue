@@ -7,7 +7,7 @@
         <NuxtLink to="/worship">開始拜拜</NuxtLink>
       </Button>
       <Button variant="outline" as-child>
-        <NuxtLink to="/temple/search">廟宇探索</NuxtLink>
+        <NuxtLink to="/temple">廟宇打卡</NuxtLink>
       </Button>
     </div>
   </div>
