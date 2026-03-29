@@ -1,14 +1,5 @@
 export type PrayerPurpose = 'study' | 'career' | 'love' | 'health' | 'wealth' | 'safety'
 
-export const PRAYER_PURPOSE_LABELS: Record<PrayerPurpose, { name: string; icon: string }> = {
-  study: { name: '學業', icon: '📚' },
-  career: { name: '事業', icon: '💼' },
-  love: { name: '愛情', icon: '💕' },
-  health: { name: '健康', icon: '🏥' },
-  wealth: { name: '財運', icon: '💰' },
-  safety: { name: '平安', icon: '🙏' },
-}
-
 export interface CheckinRecord {
   id: string
   templeId: string

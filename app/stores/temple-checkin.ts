@@ -7,6 +7,27 @@ import type {
 } from '~/types/temple-checkin'
 import templesData from '~/data/temples.json'
 import achievementsData from '~/data/achievements.json'
+import deitiesRawData from '~/data/deities.json'
+
+export const PRAYER_PURPOSE_LABELS: Record<PrayerPurpose, { name: string; icon: string }> = {
+  study: { name: '學業', icon: '📚' },
+  career: { name: '事業', icon: '💼' },
+  love: { name: '愛情', icon: '💕' },
+  health: { name: '健康', icon: '🏥' },
+  wealth: { name: '財運', icon: '💰' },
+  safety: { name: '平安', icon: '🙏' },
+}
+
+export interface DeityData {
+  id: string
+  name: string
+  title: string
+  description: string
+  offerings: string[]
+  purposes: string[]
+}
+
+export const deitiesData: DeityData[] = deitiesRawData
 
 export const useTempleCheckinStore = defineStore('temple-checkin', () => {
   const temples = templesData as Temple[]
