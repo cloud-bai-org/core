@@ -7,101 +7,104 @@ export type OfferingPhase =
   | 'arranging'   // 拖放擺設
   | 'completed'   // 擺設完成
 
-export interface OfferingState {
-  phase: OfferingPhase
-  selectedOfferingIds: string[]
-  altarOfferings: AltarOffering[]
-}
-
 let instanceCounter = 0
 
-export const useOfferingStore = defineStore('offering', {
-  state: (): OfferingState => ({
-    phase: 'selecting',
-    selectedOfferingIds: [],
-    altarOfferings: [],
-  }),
+export const useOfferingStore = defineStore('offering', () => {
+  const phase = ref<OfferingPhase>('selecting')
+  const selectedOfferingIds = ref<string[]>([])
+  const altarOfferings = ref<AltarOffering[]>([])
 
-  getters: {
-    categories(): OfferingCategory[] {
-      return offeringsData.categories as OfferingCategory[]
-    },
+  // --- Getters ---
 
-    allOfferings(): Offering[] {
-      return offeringsData.offerings as Offering[]
-    },
+  const categories = computed(() => offeringsData.categories as OfferingCategory[])
 
-    offeringsByCategory() {
-      return (categoryId: string): Offering[] => {
-        return this.allOfferings.filter(o => o.category === categoryId)
+  const allOfferings = computed(() => offeringsData.offerings as Offering[])
+
+  const selectedOfferings = computed(() =>
+    selectedOfferingIds.value
+      .map(id => allOfferings.value.find(o => o.id === id))
+      .filter((o): o is Offering => !!o),
+  )
+
+  function offeringsByCategory(categoryId: string): Offering[] {
+    return allOfferings.value.filter(o => o.category === categoryId)
+  }
+
+  function getOfferingById(id: string): Offering | undefined {
+    return allOfferings.value.find(o => o.id === id)
+  }
+
+  function isSelected(id: string): boolean {
+    return selectedOfferingIds.value.includes(id)
+  }
+
+  // --- Actions ---
+
+  function toggleOffering(id: string) {
+    const index = selectedOfferingIds.value.indexOf(id)
+    if (index >= 0) {
+      selectedOfferingIds.value.splice(index, 1)
+      altarOfferings.value = altarOfferings.value.filter((a: AltarOffering) => a.offeringId !== id)
+    } else {
+      selectedOfferingIds.value.push(id)
+    }
+  }
+
+  function proceedToArranging() {
+    altarOfferings.value = selectedOfferingIds.value.map((offeringId, i) => {
+      const cols = 4
+      const col = i % cols
+      const row = Math.floor(i / cols)
+      return {
+        instanceId: `inst-${++instanceCounter}`,
+        offeringId,
+        x: 15 + col * 22,
+        y: 20 + row * 25,
       }
-    },
+    })
+    phase.value = 'arranging'
+  }
 
-    selectedOfferings(): Offering[] {
-      return this.selectedOfferingIds
-        .map(id => this.allOfferings.find(o => o.id === id))
-        .filter((o): o is Offering => !!o)
-    },
+  function updatePosition(instanceId: string, x: number, y: number) {
+    const item = altarOfferings.value.find((a: AltarOffering) => a.instanceId === instanceId)
+    if (item) {
+      item.x = Math.max(0, Math.min(100, x))
+      item.y = Math.max(0, Math.min(100, y))
+    }
+  }
 
-    getOfferingById() {
-      return (id: string): Offering | undefined => {
-        return this.allOfferings.find(o => o.id === id)
-      }
-    },
-  },
+  function removeFromAltar(instanceId: string) {
+    altarOfferings.value = altarOfferings.value.filter((a: AltarOffering) => a.instanceId !== instanceId)
+  }
 
-  actions: {
-    toggleOffering(id: string) {
-      const index = this.selectedOfferingIds.indexOf(id)
-      if (index >= 0) {
-        this.selectedOfferingIds.splice(index, 1)
-        // 同時移除供桌上此供品的所有實例
-        this.altarOfferings = this.altarOfferings.filter(a => a.offeringId !== id)
-      } else {
-        this.selectedOfferingIds.push(id)
-      }
-    },
+  function complete() {
+    phase.value = 'completed'
+  }
 
-    isSelected(id: string): boolean {
-      return this.selectedOfferingIds.includes(id)
-    },
+  function reset() {
+    phase.value = 'selecting'
+    selectedOfferingIds.value = []
+    altarOfferings.value = []
+  }
 
-    proceedToArranging() {
-      // 將已選供品自動擺放到供桌上（預設位置）
-      this.altarOfferings = this.selectedOfferingIds.map((offeringId, i) => {
-        const cols = 4
-        const col = i % cols
-        const row = Math.floor(i / cols)
-        return {
-          instanceId: `inst-${++instanceCounter}`,
-          offeringId,
-          x: 15 + col * 22,
-          y: 20 + row * 25,
-        }
-      })
-      this.phase = 'arranging'
-    },
-
-    updatePosition(instanceId: string, x: number, y: number) {
-      const item = this.altarOfferings.find(a => a.instanceId === instanceId)
-      if (item) {
-        item.x = Math.max(0, Math.min(100, x))
-        item.y = Math.max(0, Math.min(100, y))
-      }
-    },
-
-    removeFromAltar(instanceId: string) {
-      this.altarOfferings = this.altarOfferings.filter(a => a.instanceId !== instanceId)
-    },
-
-    complete() {
-      this.phase = 'completed'
-    },
-
-    reset() {
-      this.phase = 'selecting'
-      this.selectedOfferingIds = []
-      this.altarOfferings = []
-    },
-  },
+  return {
+    // State
+    phase,
+    selectedOfferingIds,
+    altarOfferings,
+    // Getters
+    categories,
+    allOfferings,
+    selectedOfferings,
+    offeringsByCategory,
+    getOfferingById,
+    isSelected,
+    // Actions
+    toggleOffering,
+    proceedToArranging,
+    updatePosition,
+    removeFromAltar,
+    complete,
+    reset,
+  }
 })

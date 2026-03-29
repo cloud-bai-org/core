@@ -105,6 +105,7 @@ function onTouchStart(e: TouchEvent, instanceId: string) {
     }
     if (!altarRef.value || !touchInstanceId) return
     const touch = ev.touches[0]
+    if (!touch) return
     const { x, y } = toPercent(touch.clientX, touch.clientY)
     store.updatePosition(touchInstanceId, x, y)
   }
