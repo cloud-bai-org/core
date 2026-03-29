@@ -1,3 +1,5 @@
+import type { WorshipProgress } from '~/composables/useWorshipDB'
+
 export type WorshipMode = 'deity' | 'ancestor'
 
 export interface WorshipStep {
@@ -40,6 +42,9 @@ const ANCESTOR_STEPS: WorshipStep[] = [
 ]
 
 export const useWorshipStore = defineStore('worship', () => {
+  const authStore = useAuthStore()
+  const { saveProgress, getProgress, clearProgress } = useWorshipDB()
+
   // --- State ---
   const mode = ref<WorshipMode | null>(null)
   const currentStepIndex = ref(0)
@@ -143,7 +148,43 @@ export const useWorshipStore = defineStore('worship', () => {
     prayerContent.value = content
   }
 
-  function reset() {
+  // --- 持久化（僅已登入使用者） ---
+  async function persistProgress() {
+    if (!authStore.isLoggedIn || !isActive.value || !mode.value) return
+
+    await saveProgress({
+      mode: mode.value,
+      currentStepIndex: currentStepIndex.value,
+      selectedDeityId: selectedDeityId.value,
+      ancestorName: ancestorName.value,
+      ancestorLocation: ancestorLocation.value,
+      prayerContent: prayerContent.value,
+      timestamp: Date.now(),
+    })
+  }
+
+  async function restoreProgress() {
+    if (!authStore.isLoggedIn) return false
+
+    const progress = await getProgress()
+    if (!progress) return false
+
+    mode.value = progress.mode
+    currentStepIndex.value = progress.currentStepIndex
+    isActive.value = true
+    selectedDeityId.value = progress.selectedDeityId
+    ancestorName.value = progress.ancestorName
+    ancestorLocation.value = progress.ancestorLocation
+    prayerContent.value = progress.prayerContent
+    return true
+  }
+
+  async function completeCeremony() {
+    isActive.value = false
+    await clearProgress()
+  }
+
+  async function reset() {
     mode.value = null
     currentStepIndex.value = 0
     isActive.value = false
@@ -151,6 +192,7 @@ export const useWorshipStore = defineStore('worship', () => {
     ancestorName.value = ''
     ancestorLocation.value = ''
     prayerContent.value = ''
+    await clearProgress()
   }
 
   return {
@@ -180,6 +222,9 @@ export const useWorshipStore = defineStore('worship', () => {
     setDeity,
     setAncestor,
     setPrayer,
+    persistProgress,
+    restoreProgress,
+    completeCeremony,
     reset,
   }
 })
