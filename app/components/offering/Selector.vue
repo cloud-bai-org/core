@@ -1,18 +1,29 @@
 <template>
   <div class="flex flex-col gap-4">
     <!-- 分類標籤列 -->
-    <div class="flex gap-2 overflow-x-auto pb-1">
-      <button
-        v-for="cat in store.categories"
-        :key="cat.id"
-        class="shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors"
-        :class="activeCategory === cat.id
-          ? 'border-primary bg-primary text-primary-foreground'
-          : 'border-border hover:bg-muted'"
-        @click="activeCategory = cat.id"
+    <div class="relative">
+      <div
+        ref="scrollRef"
+        class="flex gap-2 overflow-x-auto scroll-smooth pb-1 scrollbar-none"
+        @scroll="updateScrollState"
       >
-        {{ cat.icon }} {{ cat.name }}
-      </button>
+        <button
+          v-for="cat in store.categories"
+          :key="cat.id"
+          class="shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors"
+          :class="activeCategory === cat.id
+            ? 'border-primary bg-primary text-primary-foreground'
+            : 'border-border hover:bg-muted'"
+          @click="activeCategory = cat.id"
+        >
+          {{ cat.icon }} {{ cat.name }}
+        </button>
+      </div>
+      <!-- 右側漸層遮罩 -->
+      <div
+        v-if="canScrollRight"
+        class="pointer-events-none absolute right-0 top-0 bottom-1 w-10 bg-gradient-to-l from-background to-transparent"
+      />
     </div>
 
     <!-- 供品網格 -->
@@ -69,4 +80,15 @@ const activeCategory = ref(store.categories[0]?.id ?? 'fruit')
 const filteredOfferings = computed(() =>
   store.offeringsByCategory(activeCategory.value),
 )
+
+const scrollRef = ref<HTMLElement | null>(null)
+const canScrollRight = ref(true)
+
+function updateScrollState() {
+  const el = scrollRef.value
+  if (!el) return
+  canScrollRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 4
+}
+
+onMounted(() => updateScrollState())
 </script>
