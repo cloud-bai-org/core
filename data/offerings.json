@@ -1,0 +1,45 @@
+{
+  "categories": [
+    { "id": "fruit", "name": "水果", "icon": "🍎" },
+    { "id": "flower", "name": "鮮花", "icon": "💐" },
+    { "id": "pastry", "name": "糕點", "icon": "🍡" },
+    { "id": "meat", "name": "三牲", "icon": "🍖" },
+    { "id": "food", "name": "熟食", "icon": "🍚" },
+    { "id": "beverage", "name": "飲品", "icon": "🍵" },
+    { "id": "other", "name": "其他", "icon": "🎁" }
+  ],
+  "offerings": [
+    { "id": "offering-apple", "name": "蘋果", "category": "fruit", "emoji": "🍎", "description": "象徵平安" },
+    { "id": "offering-orange", "name": "柑橘", "category": "fruit", "emoji": "🍊", "description": "象徵大吉大利" },
+    { "id": "offering-banana", "name": "香蕉", "category": "fruit", "emoji": "🍌", "description": "招財進寶" },
+    { "id": "offering-pineapple", "name": "鳳梨", "category": "fruit", "emoji": "🍍", "description": "象徵好運旺來" },
+    { "id": "offering-grape", "name": "葡萄", "category": "fruit", "emoji": "🍇", "description": "多子多孫" },
+    { "id": "offering-peach", "name": "壽桃", "category": "fruit", "emoji": "🍑", "description": "祝壽祈福" },
+    { "id": "offering-watermelon", "name": "西瓜", "category": "fruit", "emoji": "🍉", "description": "清涼甘甜供奉" },
+
+    { "id": "offering-lily", "name": "百合花", "category": "flower", "emoji": "🌸", "description": "百年好合" },
+    { "id": "offering-chrysanthemum", "name": "菊花", "category": "flower", "emoji": "🌼", "description": "祭祀常用花卉" },
+    { "id": "offering-lotus", "name": "蓮花", "category": "flower", "emoji": "🪷", "description": "清淨莊嚴" },
+    { "id": "offering-bouquet", "name": "鮮花束", "category": "flower", "emoji": "💐", "description": "綜合花束供奉" },
+
+    { "id": "offering-mochi", "name": "麻糬", "category": "pastry", "emoji": "🍡", "description": "黏住好運" },
+    { "id": "offering-cake", "name": "發糕", "category": "pastry", "emoji": "🧁", "description": "發財高升" },
+    { "id": "offering-cookie", "name": "餅乾", "category": "pastry", "emoji": "🍪", "description": "甜蜜供奉" },
+    { "id": "offering-tangyuan", "name": "湯圓", "category": "pastry", "emoji": "🍮", "description": "團圓美滿" },
+
+    { "id": "offering-chicken", "name": "全雞", "category": "meat", "emoji": "🍗", "description": "三牲之一，象徵起家" },
+    { "id": "offering-pork", "name": "豬肉", "category": "meat", "emoji": "🥩", "description": "三牲之一，豐盛供品" },
+    { "id": "offering-fish", "name": "全魚", "category": "meat", "emoji": "🐟", "description": "三牲之一，年年有餘" },
+
+    { "id": "offering-rice", "name": "白飯", "category": "food", "emoji": "🍚", "description": "基本供品" },
+    { "id": "offering-noodle", "name": "壽麵", "category": "food", "emoji": "🍜", "description": "長壽綿延" },
+    { "id": "offering-dumpling", "name": "水餃", "category": "food", "emoji": "🥟", "description": "元寶造型招財" },
+
+    { "id": "offering-tea", "name": "清茶", "category": "beverage", "emoji": "🍵", "description": "敬茶供奉" },
+    { "id": "offering-wine", "name": "米酒", "category": "beverage", "emoji": "🍶", "description": "敬酒禮神" },
+    { "id": "offering-water", "name": "清水", "category": "beverage", "emoji": "💧", "description": "純淨供奉" },
+
+    { "id": "offering-candle", "name": "蠟燭", "category": "other", "emoji": "🕯️", "description": "光明照耀" },
+    { "id": "offering-candy", "name": "糖果", "category": "other", "emoji": "🍬", "description": "甜蜜供奉" }
+  ]
+}

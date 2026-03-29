@@ -44,6 +44,7 @@ setup-project-rules (基礎)
 
 **關鍵路徑**：setup-project-rules → Phase 2 子模組 → worship-ceremony → group-worship
 
-## CSS Debug Strategy
+## 開發規範
 
-CSS debug 時根因優先，不做表層 overflow 遮蓋。遇到溢出問題，先追到最內層造成問題的元素，從源頭修正，不在外層 wrapper 加 overflow-hidden 等補丁。
+- **Debug 根因優先**：遇到溢出問題，先追到最內層造成問題的元素從源頭修正，不在外層 wrapper 加 overflow-hidden 等補丁。
+- **橫向捲動區域**：水平可捲動的列表（如標籤列、輪播）不顯示原生捲軸。使用 `scrollbar-none` 隱藏捲軸，搭配右側漸層遮罩（`from-background to-transparent`）提示可滾動，滾到底時遮罩消失。
