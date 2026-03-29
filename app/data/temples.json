@@ -1,0 +1,178 @@
+[
+  {
+    "id": "temple-001",
+    "name": "天恩宮",
+    "address": "雲林市福安路一段 88 號",
+    "description": "主祀天公，為地方信仰中心，每年農曆正月初九天公生最為熱鬧",
+    "location": { "lat": 25.033, "lng": 121.565 },
+    "deities": ["deity-tiangong", "deity-mazu", "deity-guanyin"],
+    "halls": [
+      { "id": "hall-001-1", "name": "天公殿", "deityId": "deity-tiangong", "order": 1 },
+      { "id": "hall-001-2", "name": "聖母殿", "deityId": "deity-mazu", "order": 2 },
+      { "id": "hall-001-3", "name": "觀音殿", "deityId": "deity-guanyin", "order": 3 }
+    ],
+    "routes": [
+      {
+        "id": "route-001-1",
+        "name": "平安祈福路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-tiangong", "location": "天公殿" },
+          { "order": 2, "deityId": "deity-guanyin", "location": "觀音殿" },
+          { "order": 3, "deityId": "deity-mazu", "location": "聖母殿" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "temple-002",
+    "name": "慈雲寺",
+    "address": "嘉和市觀音街 56 號",
+    "description": "百年古寺，以觀音菩薩靈驗聞名，香火鼎盛",
+    "location": { "lat": 25.042, "lng": 121.507 },
+    "deities": ["deity-guanyin", "deity-dizang"],
+    "halls": [
+      { "id": "hall-002-1", "name": "大雄寶殿", "deityId": "deity-guanyin", "order": 1 },
+      { "id": "hall-002-2", "name": "地藏殿", "deityId": "deity-dizang", "order": 2 }
+    ],
+    "routes": [
+      {
+        "id": "route-002-1",
+        "name": "消災祈安路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-guanyin", "location": "大雄寶殿" },
+          { "order": 2, "deityId": "deity-dizang", "location": "地藏殿" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "temple-003",
+    "name": "福德祠",
+    "address": "明德市土地巷 12 號",
+    "description": "歷史悠久的土地公廟，求財運與事業順利靈驗",
+    "location": { "lat": 25.068, "lng": 121.523 },
+    "deities": ["deity-tudi"],
+    "halls": [
+      { "id": "hall-003-1", "name": "福德正神殿", "deityId": "deity-tudi", "order": 1 }
+    ],
+    "routes": [
+      {
+        "id": "route-003-1",
+        "name": "求財路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-tudi", "location": "福德正神殿" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "temple-004",
+    "name": "文昌閣",
+    "address": "學源市文筆路 168 號",
+    "description": "主祀文昌帝君，考生必訪聖地，考季期間人潮絡繹不絕",
+    "location": { "lat": 25.015, "lng": 121.535 },
+    "deities": ["deity-wenchang", "deity-guanyu"],
+    "halls": [
+      { "id": "hall-004-1", "name": "文昌殿", "deityId": "deity-wenchang", "order": 1 },
+      { "id": "hall-004-2", "name": "武聖殿", "deityId": "deity-guanyu", "order": 2 }
+    ],
+    "routes": [
+      {
+        "id": "route-004-1",
+        "name": "金榜題名路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-wenchang", "location": "文昌殿" },
+          { "order": 2, "deityId": "deity-guanyu", "location": "武聖殿" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "temple-005",
+    "name": "月老廟",
+    "address": "合緣市紅線街 77 號",
+    "description": "全台知名月老廟，求姻緣靈驗，每年情人節舉辦大型祈福活動",
+    "location": { "lat": 25.051, "lng": 121.548 },
+    "deities": ["deity-yuelao"],
+    "halls": [
+      { "id": "hall-005-1", "name": "月老殿", "deityId": "deity-yuelao", "order": 1 }
+    ],
+    "routes": [
+      {
+        "id": "route-005-1",
+        "name": "求良緣路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-yuelao", "location": "月老殿" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "temple-006",
+    "name": "保安宮",
+    "address": "康寧市保生路 33 號",
+    "description": "主祀保生大帝，以醫藥之神聞名，信眾常來祈求身體健康",
+    "location": { "lat": 25.073, "lng": 121.515 },
+    "deities": ["deity-baosheng", "deity-guanyin"],
+    "halls": [
+      { "id": "hall-006-1", "name": "保生殿", "deityId": "deity-baosheng", "order": 1 },
+      { "id": "hall-006-2", "name": "觀音殿", "deityId": "deity-guanyin", "order": 2 }
+    ],
+    "routes": [
+      {
+        "id": "route-006-1",
+        "name": "祈求健康路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-baosheng", "location": "保生殿" },
+          { "order": 2, "deityId": "deity-guanyin", "location": "觀音殿" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "temple-007",
+    "name": "武廟",
+    "address": "義勇市忠孝路 99 號",
+    "description": "主祀關聖帝君，商人經常前來祈求生意興隆",
+    "location": { "lat": 25.028, "lng": 121.558 },
+    "deities": ["deity-guanyu", "deity-tiangong"],
+    "halls": [
+      { "id": "hall-007-1", "name": "關帝殿", "deityId": "deity-guanyu", "order": 1 },
+      { "id": "hall-007-2", "name": "天公殿", "deityId": "deity-tiangong", "order": 2 }
+    ],
+    "routes": [
+      {
+        "id": "route-007-1",
+        "name": "事業順利路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-guanyu", "location": "關帝殿" },
+          { "order": 2, "deityId": "deity-tiangong", "location": "天公殿" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "temple-008",
+    "name": "龍泉寺",
+    "address": "泉安市龍山巷 45 號",
+    "description": "依山而建的古剎，環境清幽，為修行與祈安的好去處",
+    "location": { "lat": 25.085, "lng": 121.495 },
+    "deities": ["deity-guanyin", "deity-dizang", "deity-mazu"],
+    "halls": [
+      { "id": "hall-008-1", "name": "觀音殿", "deityId": "deity-guanyin", "order": 1 },
+      { "id": "hall-008-2", "name": "地藏殿", "deityId": "deity-dizang", "order": 2 },
+      { "id": "hall-008-3", "name": "天后殿", "deityId": "deity-mazu", "order": 3 }
+    ],
+    "routes": [
+      {
+        "id": "route-008-1",
+        "name": "全殿巡禮路線",
+        "steps": [
+          { "order": 1, "deityId": "deity-guanyin", "location": "觀音殿" },
+          { "order": 2, "deityId": "deity-dizang", "location": "地藏殿" },
+          { "order": 3, "deityId": "deity-mazu", "location": "天后殿" }
+        ]
+      }
+    ]
+  }
+]

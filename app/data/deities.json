@@ -1,0 +1,74 @@
+[
+  {
+    "id": "deity-tiangong",
+    "name": "玉皇大帝",
+    "title": "天公",
+    "description": "統御萬神，為民間信仰中地位最高的神祇",
+    "offerings": ["三牲", "五果", "壽桃"],
+    "purposes": ["safety", "career"]
+  },
+  {
+    "id": "deity-mazu",
+    "name": "天上聖母",
+    "title": "媽祖",
+    "description": "航海守護神，保佑出入平安",
+    "offerings": ["鮮花", "水果", "壽麵"],
+    "purposes": ["safety", "health"]
+  },
+  {
+    "id": "deity-guanyin",
+    "name": "觀世音菩薩",
+    "title": "觀音",
+    "description": "大慈大悲，聞聲救苦，廣受信眾敬奉",
+    "offerings": ["鮮花", "水果", "清茶"],
+    "purposes": ["safety", "health", "love"]
+  },
+  {
+    "id": "deity-guanyu",
+    "name": "關聖帝君",
+    "title": "關公",
+    "description": "忠義化身，商界奉為武財神",
+    "offerings": ["三牲", "酒", "水果"],
+    "purposes": ["career", "wealth"]
+  },
+  {
+    "id": "deity-tudi",
+    "name": "福德正神",
+    "title": "土地公",
+    "description": "守護一方土地，保佑五穀豐登、生意興隆",
+    "offerings": ["土豆", "麻糬", "水果"],
+    "purposes": ["wealth", "career", "safety"]
+  },
+  {
+    "id": "deity-wenchang",
+    "name": "文昌帝君",
+    "title": "文昌公",
+    "description": "主管文運與考試，學子敬奉以祈功名",
+    "offerings": ["蔥", "芹菜", "蒜"],
+    "purposes": ["study"]
+  },
+  {
+    "id": "deity-yuelao",
+    "name": "月下老人",
+    "title": "月老",
+    "description": "掌管姻緣，以紅線牽繫天下有情人",
+    "offerings": ["喜糖", "鮮花", "紅絲線"],
+    "purposes": ["love"]
+  },
+  {
+    "id": "deity-baosheng",
+    "name": "保生大帝",
+    "title": "大道公",
+    "description": "醫藥之神，保佑身體健康、消災解厄",
+    "offerings": ["水果", "清茶", "素食"],
+    "purposes": ["health"]
+  },
+  {
+    "id": "deity-dizang",
+    "name": "地藏王菩薩",
+    "title": "地藏王",
+    "description": "地獄不空誓不成佛，守護亡靈與超度法門",
+    "offerings": ["鮮花", "水果", "清茶"],
+    "purposes": ["safety"]
+  }
+]

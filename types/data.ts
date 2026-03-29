@@ -1,10 +1,24 @@
+export interface TempleLocation {
+  lat: number
+  lng: number
+}
+
 export interface Temple {
   id: string
   name: string
   address: string
   description: string
+  location: TempleLocation
   deities: string[]
+  halls: TempleHall[]
   routes: WorshipRoute[]
+}
+
+export interface TempleHall {
+  id: string
+  name: string
+  deityId: string
+  order: number
 }
 
 export interface Deity {
