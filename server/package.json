@@ -1,0 +1,18 @@
+{
+  "name": "@cloud-bai/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/app.ts"
+  },
+  "dependencies": {
+    "@cloud-bai/shared": "workspace:*",
+    "fastify": "^5.3.3",
+    "@fastify/cors": "^11.0.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
