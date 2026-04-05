@@ -58,13 +58,22 @@
           <h3 class="text-xs font-medium text-muted-foreground">🌱 環保成效</h3>
           <div class="mt-2 grid grid-cols-2 gap-3">
             <div class="rounded-lg bg-muted/50 p-3 text-center">
-              <p class="text-lg font-medium text-primary">{{ jossPaperStore.totalPaperGrams }}g</p>
-              <p class="text-xs text-muted-foreground">減少金紙用量</p>
+              <p class="text-lg font-medium text-primary">{{ ceremonyImpact.paperSavedGrams }}g</p>
+              <p class="text-xs text-muted-foreground">減少紙張用量</p>
             </div>
             <div class="rounded-lg bg-muted/50 p-3 text-center">
-              <p class="text-lg font-medium text-primary">1</p>
-              <p class="text-xs text-muted-foreground">減少焚香數</p>
+              <p class="text-lg font-medium text-primary">{{ ceremonyImpact.co2ReducedGrams.toFixed(1) }}g</p>
+              <p class="text-xs text-muted-foreground">減少 CO₂ 排放</p>
             </div>
+          </div>
+          <!-- 明細 -->
+          <div v-if="ceremonyImpact.jossPaperDetail.length || ceremonyImpact.paperCraftDetail.count" class="mt-3 space-y-1">
+            <p v-for="detail in ceremonyImpact.jossPaperDetail" :key="detail.name" class="text-xs text-muted-foreground">
+              {{ detail.name }}：{{ detail.grams }}g
+            </p>
+            <p v-if="ceremonyImpact.paperCraftDetail.count" class="text-xs text-muted-foreground">
+              紙紮物品 ×{{ ceremonyImpact.paperCraftDetail.count }}：{{ ceremonyImpact.paperCraftDetail.grams }}g
+            </p>
           </div>
         </div>
       </CardContent>
@@ -85,7 +94,10 @@
 <script setup lang="ts">
 import { RESULT_LABELS, useDivinationStore } from '~/stores/divination'
 import { useJossPaperStore } from '~/stores/joss-paper'
+import { usePaperCraftStore } from '~/stores/paper-craft'
 import { useOfferingStore } from '~/stores/offering'
+import { useEcoImpactStore } from '~/stores/eco-impact'
+import { calculateCeremonyImpact } from '~/lib/eco-calculator'
 import deitiesData from '~/data/deities.json'
 
 definePageMeta({ capability: 'worship-ceremony' })
@@ -93,7 +105,9 @@ definePageMeta({ capability: 'worship-ceremony' })
 const worshipStore = useWorshipStore()
 const divinationStore = useDivinationStore()
 const jossPaperStore = useJossPaperStore()
+const paperCraftStore = usePaperCraftStore()
 const offeringStore = useOfferingStore()
+const ecoImpactStore = useEcoImpactStore()
 const { guard } = useWorshipGuard()
 
 const deityName = computed(() => {
@@ -103,21 +117,31 @@ const deityName = computed(() => {
   return deity?.name ?? null
 })
 
+const ceremonyImpact = computed(() =>
+  calculateCeremonyImpact(
+    jossPaperStore.selectedBundles,
+    paperCraftStore.totalItems,
+  ),
+)
+
 function handleShare() {
-  // 預留分享功能
   if (navigator.share) {
     navigator.share({
       title: '線上拜拜',
-      text: `我剛完成了一次${worshipStore.mode === 'deity' ? '拜神明' : '祭祖'}儀式！`,
+      text: `我剛完成了一次${worshipStore.mode === 'deity' ? '拜神明' : '祭祖'}儀式！減少了 ${ceremonyImpact.value.paperSavedGrams}g 紙張消耗！`,
     }).catch(() => {})
   }
 }
 
 async function handleFinish() {
+  // 儲存環保紀錄
+  await ecoImpactStore.saveRecord(ceremonyImpact.value)
+
   await worshipStore.completeCeremony()
   // 重置子模組 store
   divinationStore.reset()
   jossPaperStore.reset()
+  paperCraftStore.reset()
   offeringStore.reset()
   navigateTo('/worship')
 }
