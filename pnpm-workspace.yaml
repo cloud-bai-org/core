@@ -1,3 +1,7 @@
+packages:
+  - 'server'
+  - 'packages/shared'
+
 allowBuilds:
   '@parcel/watcher': false
   esbuild: false
