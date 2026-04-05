@@ -10,6 +10,8 @@ export default defineNuxtConfig({
       googleClientId: '',
       lineChannelId: '',
       authRedirectBase: '',
+      supabaseUrl: '',
+      supabaseAnonKey: '',
     },
   },
 
