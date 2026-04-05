@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { AltarOffering, Offering, OfferingCategory } from '~/types/data'
-import offeringsData from '~~/data/offerings.json'
+import offeringsData from '~/data/offerings.json'
 
 export type OfferingPhase =
   | 'selecting'   // 選擇供品
