@@ -88,6 +88,12 @@
         完成
       </Button>
     </div>
+
+    <!-- 里程碑慶祝動畫 -->
+    <EcoImpactMilestoneCelebration
+      :milestone="ecoImpactStore.pendingMilestone"
+      @dismiss="ecoImpactStore.dismissMilestone()"
+    />
   </div>
 </template>
 

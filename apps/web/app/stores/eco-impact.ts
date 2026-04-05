@@ -1,4 +1,5 @@
 import type { CeremonyImpact } from '~/lib/eco-calculator'
+import { type Milestone, detectNewMilestones } from '~/lib/eco-milestones'
 
 export interface EcoImpactRecord {
   id: string
@@ -16,6 +17,7 @@ export interface EcoImpactSummary {
 }
 
 const GUEST_RECORDS_KEY = 'guest_eco_impact_records'
+const ACHIEVED_MILESTONES_KEY = 'eco_achieved_milestones'
 
 export const useEcoImpactStore = defineStore('eco-impact', () => {
   const authStore = useAuthStore()
@@ -28,6 +30,41 @@ export const useEcoImpactStore = defineStore('eco-impact', () => {
   })
   const isGuest = ref(false)
   const loading = ref(false)
+  const achievedMilestoneIds = ref<string[]>([])
+  const pendingMilestone = ref<Milestone | null>(null)
+
+  // --- 里程碑 localStorage ---
+
+  function loadAchievedMilestones(): string[] {
+    if (!import.meta.client) return []
+    const raw = localStorage.getItem(ACHIEVED_MILESTONES_KEY)
+    return raw ? JSON.parse(raw) : []
+  }
+
+  function saveAchievedMilestones() {
+    if (!import.meta.client) return
+    localStorage.setItem(ACHIEVED_MILESTONES_KEY, JSON.stringify(achievedMilestoneIds.value))
+  }
+
+  function checkMilestones() {
+    const newMilestones = detectNewMilestones(
+      {
+        totalCeremonies: summary.value.totalCeremonies,
+        totalCo2ReducedGrams: summary.value.totalCo2Reduced,
+      },
+      achievedMilestoneIds.value,
+    )
+    if (newMilestones.length) {
+      // 顯示第一個新達成的里程碑
+      pendingMilestone.value = newMilestones[0]
+      achievedMilestoneIds.value.push(...newMilestones.map(m => m.id))
+      saveAchievedMilestones()
+    }
+  }
+
+  function dismissMilestone() {
+    pendingMilestone.value = null
+  }
 
   // --- 訪客 localStorage ---
 
@@ -69,6 +106,7 @@ export const useEcoImpactStore = defineStore('eco-impact', () => {
           totalCeremonies: guestRecords.length,
         }
       }
+      achievedMilestoneIds.value = loadAchievedMilestones()
     } finally {
       loading.value = false
     }
@@ -107,6 +145,9 @@ export const useEcoImpactStore = defineStore('eco-impact', () => {
     summary.value.totalPaperSaved += impact.paperSavedGrams
     summary.value.totalCo2Reduced += impact.co2ReducedGrams
     summary.value.totalCeremonies++
+
+    // 檢查里程碑
+    checkMilestones()
 
     return record
   }
@@ -147,8 +188,11 @@ export const useEcoImpactStore = defineStore('eco-impact', () => {
     summary: readonly(summary),
     isGuest: readonly(isGuest),
     loading: readonly(loading),
+    achievedMilestoneIds: readonly(achievedMilestoneIds),
+    pendingMilestone: readonly(pendingMilestone),
     fetchData,
     saveRecord,
     mergeGuestRecords,
+    dismissMilestone,
   }
 })
