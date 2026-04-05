@@ -1,5 +1,7 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
+import databasePlugin from './plugins/database.js'
+import socketPlugin from './plugins/socket.js'
 import healthRoutes from './routes/health.js'
 
 const app = Fastify({
@@ -9,6 +11,12 @@ const app = Fastify({
 await app.register(cors, {
   origin: true,
 })
+
+// Plugins（依賴順序：database → auth → socket → routes）
+if (process.env.DATABASE_URL) {
+  await app.register(databasePlugin)
+}
+await app.register(socketPlugin)
 
 // Routes
 await app.register(healthRoutes)
