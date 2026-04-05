@@ -5,6 +5,7 @@ import databasePlugin from './plugins/database.js'
 import socketPlugin from './plugins/socket.js'
 import authPlugin from './plugins/auth.js'
 import healthRoutes from './routes/health.js'
+import ecoImpactRoutes from './routes/eco-impact.js'
 
 const app = Fastify({
   logger: true,
@@ -25,6 +26,7 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
 
 // Routes
 await app.register(healthRoutes)
+await app.register(ecoImpactRoutes)
 
 const port = Number(process.env.PORT) || 3001
 
