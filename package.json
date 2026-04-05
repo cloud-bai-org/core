@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "nuxt build",
-    "dev": "pnpm run --parallel dev:app dev:server",
+    "dev": "pnpm run \"/dev:(app|server)/\"",
     "dev:app": "nuxt dev --host",
     "dev:server": "pnpm --filter @cloud-bai/server dev",
     "generate": "nuxt generate",
